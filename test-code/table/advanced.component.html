@@ -1,0 +1,115 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-home"></i> Advanced</h3>
+    </div>
+    <div class="panel-body" flex layout="row">
+        <div layout="column" style="max-width:302.45px">
+            <div layout="column">
+                <h3>Drop multiple files:</h3>
+                <div ng2File2Drop [uploader]="uploader"></div>
+            </div>
+            <div flex-grow layout="column">
+                <h2>Uploader options</h2>
+                <div layout="column">
+                    <div>
+                        <input type="text" name="url" [(ngModel)]="uploader.options.url" style="width:100%">
+                    </div>
+                    <div class="switcher">
+                        <div class="check">
+                            <label class="switch">
+                                <input type="checkbox" name="AutoUpload" [(ngModel)]="uploader.options.autoUpload">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                        <strong>AutoUpload</strong>
+                    </div>
+                    <div class="switcher">
+                        <div class="check">
+                            <label class="switch">
+                                <input type="checkbox" name="removeBySuccess" [(ngModel)]="uploader.options.removeBySuccess">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                        <strong>Remove by Success</strong>
+                    </div>
+                    <div class="switcher">
+                        <div class="check">
+                            <label class="switch">
+                                <input type="checkbox" name="uniqueFiles" [(ngModel)]="uploader.options.uniqueFiles">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                        <strong>Unique files</strong>
+                    </div>
+                </div>
+                <h3>Uploader options</h3>
+                <pre>{{uploader.options | json}}</pre>
+                <h3>Hooks active</h3>
+                <pre>{{ hookName | json }}</pre>
+            </div>
+        </div>
+        <div flex-grow layout="column" style="padding-left: 20px;">
+            <h2>Preview uploader table (example):</h2>
+            <div style="position: relative;"> 
+                <table style="width: 100%;" class="upload-list">
+                        <caption>Files in queue <strong [innerHTML]="(uploader.queue$ | async)?.length"></strong></caption>
+                        <thead>
+                            <tr>
+                                    <th style="width: 10%; min-width: 142px;">Preview</th>
+                                    <th style="width: 20%;">Name</th>
+                                    <th >Progress</th>
+                                    <th style="width: 12%;">Details</th>
+                                    <th style="width: 25%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="hasFiles">
+                            <tr *ngFor="let file of (uploader.queue$ | async)">
+                                    <td class="image">
+                                        <picture [class.success]="file?.success"><img src="" imgPreview [image]="file" style="max-width:142px;max-height:100px;"/></picture>
+                                    </td>
+                                    <td><span [innerHTML]="file?.name"></span></td>
+                                    <td><progress progressBar [progress]="(file?.progress$ | async)" max="100"></progress></td>
+                                    <td>
+                                        <div class="fileDetails">
+                                                <table>
+                                                    <tr>
+                                                            <th>Type</th>
+                                                            <td><span [innerHTML]="file?.type"></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                            <th>Size</th>
+                                                            <td><span>{{file?.size | fileSize}}</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                            <th>Date</th>
+                                                            <td><span>{{file?.date | date: 'dd.MM.yyyy'}}</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                            <th>Time</th>
+                                                            <td><span>{{file?.date | date: 'hh:mm:ss'}}</span></td>
+                                                    </tr>
+                                                </table>
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button type="button" class="btn btn-success" (click)="file?.upload()" [disabled]="!file?.canUpload()">Upload</button>
+                                        <button type="button" class="btn btn-warning" (click)="file?.cancel()" [disabled]="!file?.isUploading()">Cancel</button>
+                                        <button type="button" class="btn btn-danger" (click)="file?.remove()">Remove</button>
+                                    </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                    <td colspan="5">© by ... 2017 <span class="smallID">[<small [innerHTML]="uploader.id"></small>]</span></td>
+                            </tr>
+                        </tfoot>
+                </table>
+                <div flex layout="row" class="actions" style="margin-top: 20px;">
+                    <button type="button" class="btn btn-success btn-lg" *ngIf="hasFiles" (click)="uploader.upload();">UploadAll</button>
+                    <button type="button" class="btn btn-warning btn-lg" *ngIf="hasFiles" (click)="uploader.cancel();">CancelAll</button>
+                    <button type="button" class="btn btn-danger btn-lg" *ngIf="hasFiles" (click)="uploader.remove();">RemoveAll</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

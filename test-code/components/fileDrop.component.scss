@@ -1,0 +1,67 @@
+$cubicBezier: 0.250, 0.460, 0.450, 0.940;
+
+.drop-area {
+    position: relative;
+    display: table;
+    border: 2px dashed dimgray;
+    width: 100%;
+    height: 120px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color cubic-bezier($cubicBezier) .3s,
+                border-color cubic-bezier($cubicBezier) .3s,
+                opacity cubic-bezier($cubicBezier) .3s;
+    background-color: transparent;
+    background-clip: padding-box;
+    z-index: 1;
+
+    &:after {
+        display: table-cell;
+        content: 'Drop files here or select';
+        text-align: center;
+        vertical-align: middle;
+        border-radius: 30px;
+        z-index: 2; 
+    }
+
+    &.drop-enter {
+        background-color: rgba(0,0,0,.1);
+        border-color: rgba(0,0,0,.9);
+
+        &:after {
+            content: attr(dropValueText);
+        }
+    }
+
+    input {
+        display: none;
+    }
+    
+    img, .icon {
+        pointer-events: none;
+    }
+
+    img {
+        left: 50%;
+        opacity: 0;
+        max-height: 80%;
+        max-width: 80%;
+        position: absolute;
+        top: 50%;
+        -webkit-transition: all 300ms ease-in;
+        -moz-transition: all 300ms ease-in;
+        -ms-transition: all 300ms ease-in;
+        -o-transition: all 300ms ease-in;
+        transition: all 300ms ease-in;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        z-index: -1; 
+
+        &.loaded {
+            opacity: .7;
+        }
+    }
+}
