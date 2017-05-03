@@ -1,28 +1,58 @@
-# NgxFileUploader
+# Angular X File Upload [![Build Status](https://travis-ci.org/uniprank/ngx-file-uploader.svg?branch=master)](https://travis-ci.org/uniprank/ngx-file-uploader)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.1.
+---
 
-## Development server
+## About
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+**Angular ngx File Upload** is a module for the [@Angular](https://angular.io/) framework. Supports drag-n-drop upload, upload progress, validation filters and a file upload queue. It supports native HTML5 uploads. Works with any server side platform which supports standard HTML form uploads.
 
-## Code scaffolding
+When files are selected or dropped into the component/directive, one or more filters are applied. Files which pass all filters are added to the queue. When file is added to the queue, for him is created instance of `{FileManager}` and uploader options are used for this object. After, items in the queue (queue$) are ready for uploading.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
+## Package managers
+### NPM
+```
+npm install @uniprank/ngx-file-uploader --save
+```
+You could find this module in npm like [_angular ngx file uploader_](https://www.npmjs.com/search?q=uniprank%20ngx-file-uploader).
 
-## Build
+### Module Dependency
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Add `import { FileUploaderModule } from '@uniprank/ngx-file-uploader';` to your module header:
 
-## Running unit tests
+```
+@NgModule({
+    declarations: [ ],
+    imports: [
+       FileUploaderModule
+    ],
+    exports: [ ]
+})
+export class ExampleModule {
+}
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<p align="center">
+  <img src="test-code/images/advanced-fileuploader.png" style="width:100%; height: auto;"/>
+</p>
 
-## Running end-to-end tests
+## Demos
+1. [Simple example](http://uniprank.github.io/ngx-file-uploader/example/#simple)
+2. [Advanced example](http://uniprank.github.io/ngx-file-uploader/example/#advanced)
+3. [FileDrop Component example](http://uniprank.github.io/ngx-file-uploader/example/#filedropexample)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+## More Info
 
-## Further help
+1. [Introduction](https://github.com/uniprank/ngx-file-uploader/wiki/Introduction)
+2. [Module API](https://github.com/uniprank/ngx-file-uploader/wiki/Module-API)
+3. [FAQ](https://github.com/uniprank/ngx-file-uploaderwiki/FAQ)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Browser compatibility
+You could check out features of target browsers using http://caniuse.com/. For example, the [File API](http://caniuse.com/#feat=fileapi) feature.
+
+| Feature/Browser  | IE 8-9 |  IE10+ | Firefox 28+ | Chrome 38+ | Safari 6+ | 
+|----------|:---:|:---:|:---:|:---:|:---:|
+| `<input type="file"/>` | + | + | + | + | + |
+| `<input type="file" multiple/>` | - | + | + | + | + |
+| Drag-n-drop | - | + | + | + | + |
+| XHR transport (multipart,binary) | - | + | + | + | + |
+| AJAX headers | - | + | + | + | + |

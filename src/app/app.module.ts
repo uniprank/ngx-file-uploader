@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { FileUploaderModule } from '../module';
+
+import { FileDropModule } from './components/file-drop/file-drop.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +15,9 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    FileUploaderModule,
+    FileDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
