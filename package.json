@@ -1,6 +1,6 @@
 {
   "name": "@uniprank/ngx-file-uploader",
-  "version": "4.1.0",
+  "version": "4.1.0-Beta1",
   "homepage": "https://github.com/uniprank/ngx-file-uploader#readme",
   "author": "Dennis Fiedler <dennis.fiedler@uniprank.com>",
   "description": "An angular file uploader library",

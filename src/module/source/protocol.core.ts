@@ -6,13 +6,13 @@ import { FileSizePipe } from '../pipe/fileSizePipe.pipe';
 
 // tslint:disable:max-line-length
 
-let {
+const {
     FormData
 } = (<any>window);
 
 /**
  * Absractr proctol class if someone want to write his own protocol
- * 
+ *
  * @export
  * @abstract
  * @class Protocol
@@ -24,7 +24,7 @@ export abstract class Protocol {
     _abort: EventEmitter<any>;
 
     public set connection(obj: any) {
-        let {
+        const {
             _file,
             _connection
         } = obj;
@@ -41,8 +41,8 @@ export abstract class Protocol {
 
     /**
      * Creates an instance of Protocol and for each protocol an own unique ID.
-     * 
-     * 
+     *
+     *
      * @memberOf Protocol
      */
     constructor () {
@@ -56,60 +56,60 @@ export abstract class Protocol {
 
     /**
      * Call uploader method _onCompleteFile.
-     * 
+     *
      * @param {FileManager} _file
      * @param {any} response
      * @param {any} status
      * @param {any} headers
-     * 
+     *
      * @memberOf Protocol
      */
     public _onLoad (_file: FileManager, response: any, status: number, headers: any): void {
-        let uploader: Transfer = _file.getUploader();
-        let gist = this._isSuccessCode(status);
-        let method = (g: boolean, f: FileManager, r: any, s: number, h: any) => { if (g) { uploader._onSuccessFile(f, r, s, h); } else { uploader._onErrorFile(f, r, s, h); } };
+        const uploader: Transfer = _file.getUploader();
+        const gist = this._isSuccessCode(status);
+        const method = (g: boolean, f: FileManager, r: any, s: number, h: any) => { if (g) { uploader._onSuccessFile(f, r, s, h); } else { uploader._onErrorFile(f, r, s, h); } };
         method(gist, _file, response, status, headers);
         uploader._onCompleteFile(_file, response, status, headers);
     }
 
     /**
      * Call uploader methodes _onErrorFile and _onCompleteFile.
-     * 
+     *
      * @param {FileManager} _file
      * @param {any} response
      * @param {any} status
      * @param {any} headers
-     * 
+     *
      * @memberOf Protocol
      */
     public _onError (_file: FileManager, response: any, status: number, headers: any): void {
-        let uploader: Transfer = _file.getUploader();
+        const uploader: Transfer = _file.getUploader();
         uploader._onErrorFile(_file, response, status, headers);
         uploader._onCompleteFile(_file, response, status, headers);
     }
 
     /**
      * Call uploader methodes _onErrorFile and _onCompleteFile.
-     * 
+     *
      * @param {FileManager} _file
      * @param {any} response
      * @param {any} status
      * @param {any} headers
-     * 
+     *
      * @memberOf Protocol
      */
     public _onAbort (_file: FileManager, response: any, status: number, headers: any): void {
-        let uploader: Transfer = _file.getUploader();
+        const uploader: Transfer = _file.getUploader();
         uploader._onErrorFile(_file, response, status, headers);
         uploader._onCompleteFile(_file, response, status, headers);
     }
 
     /**
      * Validate response status code.
-     * 
+     *
      * @param {number} status
      * @returns {boolean}
-     * 
+     *
      * @memberOf Protocol
      */
     public _isSuccessCode(status: number): boolean {
@@ -117,7 +117,7 @@ export abstract class Protocol {
     }
 
     public isConnected(_file: FileManager): any {
-        for (let _request of this._connections) {
+        for (const _request of this._connections) {
             if (_request.id === _file.id) {
                 return _request;
             }
@@ -127,7 +127,7 @@ export abstract class Protocol {
 
     public removeConnection(_file: FileManager): void {
         let _request: any | null = null;
-        for (let _key in this._connections) {
+        for (const _key in this._connections) {
             if ( this._connections.hasOwnProperty( _key ) ) {
                 _request = this._connections[_key];
                 if (_file.id === _request.id) {
@@ -139,10 +139,10 @@ export abstract class Protocol {
 
     /**
      * Must be implemented at each protocol class.
-     * 
+     *
      * @abstract
      * @param {FileManager} _file
-     * 
+     *
      * @memberOf Protocol
      */
     abstract run(_file: FileManager): any;
@@ -151,7 +151,7 @@ export abstract class Protocol {
 
 /**
  * Standard protocol for server communication (file uploading)
- * 
+ *
  * @export
  * @class ProtocolXHR
  * @extends {Protocol}
@@ -163,28 +163,28 @@ export class ProtocolXHR extends Protocol {
 
     /**
      * Implementation of the abstract.protocol method `run`
-     * 
+     *
      * @param {FileManager} _file
-     * 
+     *
      * @memberOf ProtocolXHR
      */
     public run (_file: FileManager): void {
         let _xhr: XMLHttpRequest;
         let sendable: any;
-        let uploader: Transfer = _file.getUploader();
+        const uploader: Transfer = _file.getUploader();
 
-        let _formData = Utils.extendValue(uploader.options.formData, _file.options.formData);
-        let _withCredentials = Utils.extendValue(uploader.options.withCredentials, _file.options.withCredentials);
-        let _method = Utils.extendValue(uploader.options.method, _file.options.method);
-        let _url = Utils.extendValue(uploader.options.url, _file.options.url);
-        let _alias = Utils.extendValue(uploader.options.alias, _file.options.alias);
-        let _headers = Utils.extendValue(uploader.options.headers, _file.options.headers);
+        const _formData = Utils.extendValue(uploader.options.formData, _file.options.formData);
+        const _withCredentials = Utils.extendValue(uploader.options.withCredentials, _file.options.withCredentials);
+        const _method = Utils.extendValue(uploader.options.method, _file.options.method);
+        const _url = Utils.extendValue(uploader.options.url, _file.options.url);
+        const _alias = Utils.extendValue(uploader.options.alias, _file.options.alias);
+        const _headers = Utils.extendValue(uploader.options.headers, _file.options.headers);
 
-        let time: number = new Date().getTime();
+        const time: number = new Date().getTime();
         let load = 0;
         let speed = 0;
         let sppedToText: string|null = null;
-        let $filesize = new FileSizePipe();
+        const $filesize = new FileSizePipe();
 
         _xhr = new XMLHttpRequest();
 
@@ -197,10 +197,10 @@ export class ProtocolXHR extends Protocol {
 
         if (typeof _formData !== 'undefined') {
             // Only allow Multipart
-            for (let obj of _formData) {
-                for (let key in obj) {
+            for (const obj of _formData) {
+                for (const key in obj) {
                     if ( obj.hasOwnProperty( key ) ) {
-                        let value = obj[key];
+                        const value = obj[key];
                         sendable.append(key, value);
                     }
                 }
@@ -215,12 +215,12 @@ export class ProtocolXHR extends Protocol {
 
         _xhr.upload.addEventListener('progress', (event: ProgressEvent) => {
             if (event.lengthComputable) {
-                let _time = new Date().getTime() - time;
+                const _time = new Date().getTime() - time;
                 load = event.loaded - load;
                 speed = load / _time * 1000;
                 speed = parseInt(<any>speed, 10);
                 sppedToText = $filesize.transform(speed);
-                let _obj = {
+                const _obj = {
                     total: event.total,
                     loaded: event.loaded,
                     percent: Math.round(event.loaded / event.total * 100),
@@ -231,24 +231,24 @@ export class ProtocolXHR extends Protocol {
             }
         });
         _xhr.addEventListener('load', () => {
-            let headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
-            let response = uploader._transformResponse(_xhr.response, headers);
+            const headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
+            const response = uploader._transformResponse(_xhr.response, headers);
             console.log('File upload done');
-            let status = _xhr.status;
+            const status = _xhr.status;
             this._load.emit({_file: _file, response: response, status: status, headers: headers});
         });
         _xhr.addEventListener('error', () => {
-            let headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
-            let response = uploader._transformResponse(_xhr.response, headers);
+            const headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
+            const response = uploader._transformResponse(_xhr.response, headers);
             console.log('File upload error');
-            let status = _xhr.status;
+            const status = _xhr.status;
             this._error.emit({_file: _file, response: response, status: status, headers: headers});
         });
         _xhr.addEventListener('abort', () => {
-            let headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
-            let response = uploader._transformResponse(_xhr.response, headers);
+            const headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
+            const response = uploader._transformResponse(_xhr.response, headers);
             console.log('File upload abort');
-            let status = _xhr.status;
+            const status = _xhr.status;
             this._abort.emit({_file: _file, response: response, status: status, headers: headers});
         });
 
@@ -256,9 +256,9 @@ export class ProtocolXHR extends Protocol {
 
         _xhr.withCredentials = _withCredentials;
 
-        for (let name in _headers) {
+        for (const name in _headers) {
             if ( _headers.hasOwnProperty( name ) ) {
-                let value = _headers[name];
+                const value = _headers[name];
                 _xhr.setRequestHeader(name, value);
             }
         }
@@ -267,7 +267,7 @@ export class ProtocolXHR extends Protocol {
     }
 
     public cancel(_file: FileManager) {
-        let _request = this.isConnected(_file);
+        const _request = this.isConnected(_file);
         if (!!_request) {
             _request.connection.abort();
             this.removeConnection(_file);

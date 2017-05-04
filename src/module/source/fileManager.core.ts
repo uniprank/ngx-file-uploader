@@ -22,10 +22,10 @@ export class FileObject {
     name: string;
 
     constructor (fileOrInput: any) {
-        let isInput = Utils.isElement(fileOrInput);
-        let fakePathOrObject = isInput ? fileOrInput.value : fileOrInput;
-        let isFakePath = Utils.isString(fakePathOrObject) ?  true : false;
-        let method = (v: boolean, x: any) => { if (v) { this._createFromFakePath(x); } else { this._createFromObject(x); } };
+        const isInput = Utils.isElement(fileOrInput);
+        const fakePathOrObject = isInput ? fileOrInput.value : fileOrInput;
+        const isFakePath = Utils.isString(fakePathOrObject) ?  true : false;
+        const method = (v: boolean, x: any) => { if (v) { this._createFromFakePath(x); } else { this._createFromObject(x); } };
         method(isFakePath, fakePathOrObject);
     }
 
@@ -46,7 +46,7 @@ export class FileObject {
 
 export class FileManager {
     public options: FileManagerOptions;
-    
+
     public set protocol(_protocol: any) {
         this._protocol = _protocol;
     }
@@ -122,11 +122,11 @@ export class FileManager {
 
     /**
      * Creates an instance of FileManager.
-     * 
+     *
      * @param {*} _file
      * @param {Transfer} [_uploader]
      * @param {FileManagerOptions} [_options]
-     * 
+     *
      * @memberOf FileManager
      */
     constructor (_file: any, _options?: FileManagerOptions, _uploader?: Transfer) {
@@ -143,8 +143,8 @@ export class FileManager {
         this._isCancel = false;
         this._isError = false;
 
-        let isInput = Utils.isElement(_file);
-        let file = isInput ? new FileObject(_file.files[0]) : new FileObject(_file);
+        const isInput = Utils.isElement(_file);
+        const file = isInput ? new FileObject(_file.files[0]) : new FileObject(_file);
 
         this._file = file;
         this._fileElement = isInput ? _file.files[0] : _file;
@@ -167,7 +167,7 @@ export class FileManager {
             this._uploader.removeFile(this);
         }
         this._uploader = _uploader;
-        let check = this._uploader.addFile(this);
+        const check = this._uploader.addFile(this);
         this._setFileActive(check);
     }
 
@@ -184,9 +184,9 @@ export class FileManager {
 
     /**
      * Return uploader if exists else throw error
-     * 
+     *
      * @returns {Transfer}
-     * 
+     *
      * @memberOf FileManager
      */
     public getUploader (): Transfer {
@@ -198,8 +198,8 @@ export class FileManager {
 
     /**
      * Start uploading this file
-     * 
-     * 
+     *
+     *
      * @memberOf FileManager
      */
     public upload (): void {
@@ -222,13 +222,13 @@ export class FileManager {
 
     /**
      * Cancel upload process from this file
-     * 
-     * 
+     *
+     *
      * @memberOf FileManager
      */
     public cancel (): void {
         if (this._isUploading) {
-            let uploader = this.getUploader();
+            const uploader = this.getUploader();
             uploader.cancelUploadItem(this);
         }
     }
@@ -243,8 +243,8 @@ export class FileManager {
 
     /**
      * Remove this FileManger from uploader queue
-     * 
-     * 
+     *
+     *
      * @memberOf FileManager
      */
     public remove (): void {

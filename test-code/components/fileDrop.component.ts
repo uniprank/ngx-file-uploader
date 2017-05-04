@@ -2,6 +2,7 @@
 import { Component, Directive, EventEmitter, ElementRef, Renderer, HostListener, Output, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Subscription';
 import { FileManager, FileManagerOptions, FileUploader, Utils, Transfer, TransferOptions } from '@uniprank/ngx-file-uploader';
 
 // tslint:disable:component-selector
@@ -14,7 +15,7 @@ import { FileManager, FileManagerOptions, FileUploader, Utils, Transfer, Transfe
         './fileDrop.component.scss'
     ]
 })
-export class FileDropComponent implements OnInit {
+export class FileDropComponent implements OnInit, OnDestroy {
     @Output()
     public fileHoverStart: EventEmitter<any> = new EventEmitter<any>();
     @Output()
@@ -33,7 +34,9 @@ export class FileDropComponent implements OnInit {
     @Input()
     public maxFiles: number;
 
-    public imageLoaded: boolean = false;
+    public imageLoaded = false;
+
+    private _subs: Subscription[] = [];
 
     private _limit: number = -1;
     private _files: FileManager[];
@@ -50,17 +53,30 @@ export class FileDropComponent implements OnInit {
             this._limit = this.maxFiles;
         }
 
-        this.uploader.queue$.subscribe( (data: FileManager[]) => {
+        const sub1 = this.uploader.queue$.subscribe( (data: FileManager[]) => {
             this.checkClass();
+        }, error => {
+            throw new Error(error);
         });
+        this._subs.push(sub1);
 
-        this._files$.subscribe( (data: FileManager[]) => {
+        const sub2 = this._files$.subscribe( (data: FileManager[]) => {
             this.imageLoaded = (data.length > 0);
+        }, error => {
+            throw new Error(error);
         });
+        this._subs.push(sub2);
+    }
+
+    public ngOnDestroy() {
+        for (const _sub of this._subs) {
+            _sub.unsubscribe();
+        }
+        this._subs = [];
     }
 
     public get files(): any {
-        let files = this._files$.getValue();
+        const files = this._files$.getValue();
         return files;
     }
 
@@ -102,10 +118,10 @@ export class FileDropComponent implements OnInit {
     }
 
     private cleanUp(): void {
-        let files = this._files$.getValue();
-        for (let key in files) {
+        const files = this._files$.getValue();
+        for (const key in files) {
             if ( files.hasOwnProperty( key ) ) {
-                let file = files[key];
+                const file = files[key];
                 (!file.inQueue) && files.splice(+key, 1);
             }
         }

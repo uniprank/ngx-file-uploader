@@ -46,7 +46,7 @@ export class FileDropDirective implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         if (this._files.length > 0) {
-            for (let _file of this._files) {
+            for (const _file of this._files) {
                 if (_file instanceof FileManager) {
                     if (!_file.isUploaded()) {
                         _file.cancel();
@@ -71,7 +71,7 @@ export class FileDropDirective implements OnInit, OnDestroy {
                 return;
             }
             this.renderer.setElementClass(this.element.nativeElement, 'drop-enter', true);
-            let _dropValueText = 'Drop now';
+            const _dropValueText = 'Drop now';
             this.renderer.setElementAttribute(this.element.nativeElement, 'dropValueText', _dropValueText);
 
             // Let the client know
@@ -129,7 +129,7 @@ export class FileDropDirective implements OnInit, OnDestroy {
                 return;
             }
 
-            let filesData: FileList = this._InputFile.files;
+            const filesData: FileList = this._InputFile.files;
 
             if (!this.hasFiles(this._InputFile.types)) {
                 return;
@@ -158,7 +158,7 @@ export class FileDropDirective implements OnInit, OnDestroy {
     private readFile(_files: FileList): void {
         let fmObject: FileManager;
         for (let i = 0; i < _files.length; i++) {
-            let file = _files[i];
+            const file = _files[i];
             try {
                 fmObject = new FileManager(file, this.fileOptions, this.uploader);
             } catch (e) {

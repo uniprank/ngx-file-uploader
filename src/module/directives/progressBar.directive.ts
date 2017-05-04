@@ -11,10 +11,10 @@ export class ProgressBarDirective implements OnChanges {
     constructor(private el: ElementRef, private renderer: Renderer) { }
 
     ngOnChanges() {
-        let el = this.el;
+        const el = this.el;
         el.nativeElement.value = this.progress.percent;
         if (this.progress.speed > 0) {
-            let pipe = new FileSizePipe();
+            const pipe = new FileSizePipe();
             this.renderer.setElementAttribute(this.el.nativeElement, 'speedText', pipe.transform(this.progress.loaded));
         } else {
             this.renderer.setElementAttribute(this.el.nativeElement, 'speedText', '');

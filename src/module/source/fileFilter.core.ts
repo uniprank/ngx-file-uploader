@@ -15,7 +15,7 @@ export class FileFilter {
         return this._type;
     }
 
-    private _name: string = '';
+    private _name = '';
     private _regex: RegExp | null = null;
     private _regCheck: string | null = null;
     private _callback: Function | null = null;
@@ -61,7 +61,7 @@ export class FileFilter {
                     case 'date': {
                         // Format for validation is `2017-01-01 10:10:10`
                         // tslint:disable-next-line:max-line-length
-                        let _checkDate: string | null = new DatePipe('en-US').transform(_file.object.lastModifiedDate, 'yyyy-MM-dd hh:mm:ss');
+                        const _checkDate: string | null = new DatePipe('en-US').transform(_file.object.lastModifiedDate, 'yyyy-MM-dd hh:mm:ss');
                         if (_checkDate && _checkDate.match(<RegExp>this._regex)) {
                             _valid = true;
                         }

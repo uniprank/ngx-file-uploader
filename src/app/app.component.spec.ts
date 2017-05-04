@@ -2,9 +2,18 @@ import { TestBed, async } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
 
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+import { FileUploaderModule } from '../module';
+import { FileDropModule } from './components/file-drop/file-drop.module';
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule, HttpModule, FileUploaderModule, FileDropModule
+      ],
       declarations: [
         AppComponent
       ],

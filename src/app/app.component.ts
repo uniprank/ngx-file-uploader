@@ -1,20 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Transfer, FileUploader, FileFilter, hookType, UploaderHook } from '../module';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  public uploader: Transfer;
-  public hasFiles: boolean;
-  public hookName: string;
+export class AppComponent implements OnDestroy {
+    public uploader: FileUploader;
+    public hasFiles: boolean;
+    public hookName: string;
 
-  public title = 'app works!';
+    public title = 'app works!';
 
-  constructor () {
+    private _subs: Subscription;
+
+    constructor () {
         this.uploader = new FileUploader({
             url: 'https://uniprank.github.io/ngx-file-uploader/example/',
             removeBySuccess: false,
@@ -34,9 +37,17 @@ export class AppComponent {
             0
         ));
 
-        this.uploader.queue$.subscribe((data: any) => {
+        this._subs = this.uploader.queue$.subscribe((data: any) => {
             this.hasFiles = (data.length > 0);
+        }, error => {
+            throw new Error(error);
         });
-        return;
+    }
+
+    ngOnDestroy() {
+        if (this._subs) {
+            this._subs.unsubscribe();
+        }
+        this.uploader.destroy();
     }
 }

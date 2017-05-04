@@ -25,7 +25,7 @@ const TransferOptionsDefault: TransferOptions = {
 
 /**
  * An abstract class for the transport functionality
- * 
+ *
  * @export
  * @abstract
  * @class Transfer
@@ -56,13 +56,13 @@ export abstract class Transfer {
 
     /**
      * Creates an instance of Transfer.
-     * 
+     *
      * @param {string} type
-     * 
+     *
      * @memberOf Transfer
      */
     constructor (public type: string, _options?: TransferOptions) {
-        let div = document.createElement( 'div' );
+        const div = document.createElement( 'div' );
         this._isHTML5 = !!(File && FormData && FileReader);
         this._isDragAndDrop = ( ( 'draggable' in div ) || ( 'ondragstart' in div && 'ondrop' in div ) ) ? true : false;
         this._id = Utils.uniqueID();
@@ -77,9 +77,9 @@ export abstract class Transfer {
 
     /**
      * Bind options to FileManager
-     * 
+     *
      * @param {FileManagerOptions} _options
-     * 
+     *
      * @memberOf FileManager
      */
     public bindOptions (_options: TransferOptions): void {
@@ -88,9 +88,9 @@ export abstract class Transfer {
 
     /**
      * It gives HTML5 check back
-     * 
+     *
      * @returns {Boolean}
-     * 
+     *
      * @memberOf Transfer
      */
     public isHTML5 (): Boolean {
@@ -99,9 +99,9 @@ export abstract class Transfer {
 
     /**
      * It gives DragAndDrop check back
-     * 
+     *
      * @returns {Boolean}
-     * 
+     *
      * @memberOf Transfer
      */
     public isDragAndDrop (): Boolean {
@@ -110,9 +110,9 @@ export abstract class Transfer {
 
     /**
      * To implement a hock
-     * 
+     *
      * @param {UploaderHook} hook
-     * 
+     *
      * @memberOf Transfer
      */
     public hook ( _hook: UploaderHook ) {
@@ -147,15 +147,15 @@ export abstract class Transfer {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param {UploaderHook} hook
      * @returns this
-     * 
+     *
      * @memberOf Transfer
      */
     public removeHook ( _hook: UploaderHook ): boolean {
-        let key = this.hookExists(_hook);
+        const key = this.hookExists(_hook);
         if ( key >= 0 ) {
             this._hooks.splice(key, 1);
             return true;
@@ -164,13 +164,13 @@ export abstract class Transfer {
     }
 
     public addFilesToQueue (_files: any, options?: FileManagerOptions): FileManager[] {
-        let _retFiles: FileManager[] = [];
+        const _retFiles: FileManager[] = [];
         let _dummyFile: FileManager;
         let _check = false;
 
         if (Utils.isElement(_files)) {
             // If _files was not converted
-            for (let _fileElement of _files.files) {
+            for (const _fileElement of _files.files) {
                 try {
                     _dummyFile = new FileManager(_fileElement, options, this);
                 } catch (e) {
@@ -182,7 +182,7 @@ export abstract class Transfer {
         } else if (_files instanceof Object) {
             // If _files is an array of FileManger
             if ( (typeof _files[0] !== 'undefined') && (_files[0] instanceof FileManager) ) {
-                for (let _file of _files) {
+                for (const _file of _files) {
                     _check = this.addFile(_file);
                     (_check) && _retFiles.push(_file);
                 }
@@ -209,7 +209,7 @@ export abstract class Transfer {
             return false;
         }
 
-        let queue = this._queue$.getValue();
+        const queue = this._queue$.getValue();
         if (this.options.uniqueFiles) {
             if (this.notInQueue(_file) === -1) {
                 this._runHook(hookType.beforeAddingFile, _file);
@@ -234,8 +234,8 @@ export abstract class Transfer {
     }
 
     public removeFile (_file: FileManager): boolean {
-        let key = this.notInQueue(_file);
-        let queue = this._queue$.getValue();
+        const key = this.notInQueue(_file);
+        const queue = this._queue$.getValue();
         if (key >= 0) {
             queue.splice(key, 1);
             this._queue$.next( queue );
@@ -245,10 +245,10 @@ export abstract class Transfer {
     }
 
     public notInQueue (_file: FileManager ): number {
-        let queue = this._queue$.getValue();
-        for (let key in queue) {
+        const queue = this._queue$.getValue();
+        for (const key in queue) {
             if ( queue.hasOwnProperty( key ) ) {
-                let obj = queue[key];
+                const obj = queue[key];
                 if (
                     (obj.id === _file.id) ||
                     ( (obj.name + obj.type + obj.size) ===
@@ -268,7 +268,7 @@ export abstract class Transfer {
     }
 
     public validate (_file: FileManager) {
-        for (let _filter of (<FileFilter[]>this.options.filters)) {
+        for (const _filter of (<FileFilter[]>this.options.filters)) {
             if (!_filter.validate(_file)) {
                 throw new Error(`File [${_file.name}] doesn't fit with filter [${_filter.name}]`);
             }
@@ -286,10 +286,10 @@ export abstract class Transfer {
 
      /**
       * Validate response status code.
-      * 
+      *
       * @param {number} status
       * @returns {boolean}
-      * 
+      *
       * @memberOf Protocol
       */
      public _isSuccessCode(status: number): boolean {
@@ -301,17 +301,17 @@ export abstract class Transfer {
      */
     public upload () {
         this._onBeforeUploadAll();
-        for (let _file of this.queueObs) {
+        for (const _file of this.queueObs) {
             this.uploadItem(_file);
         }
     }
     public cancel () {
-        for (let _file of this.queueObs) {
+        for (const _file of this.queueObs) {
             this.cancelUploadItem(_file);
         }
     }
     public remove () {
-        for (let _file of this.queueObs) {
+        for (const _file of this.queueObs) {
             this.removeFile(_file);
         }
     }
@@ -352,12 +352,12 @@ export abstract class Transfer {
      */
 
     /**
-     * 
-     * 
+     *
+     *
      * @param {FileManager} _file
      * @param {number} _progress
      * @returns {void}
-     * 
+     *
      * @memberOf FileManager
      */
     _onAddFileAll(): void {
@@ -390,10 +390,10 @@ export abstract class Transfer {
         this._onProgress();
      }
     _onProgress(): void {
-        let queue: FileManager[] = this._queue$.getValue();
+        const queue: FileManager[] = this._queue$.getValue();
         if (queue.length > 0) {
             let percent = 0;
-            for (let file of queue) {
+            for (const file of queue) {
                 if (file.success || file.error) {
                     percent += 100;
                 } else if (file.isUploading) {
@@ -437,12 +437,13 @@ export abstract class Transfer {
         };
     }
     _parseHeaders(headers: any): any {
-        let parsed: any = {}, key: any, val: any, i: any;
+        const parsed: any = {};
+        let key: any, val: any, i: any;
 
         if (!headers) { return parsed; }
 
-        let incomeHeaders = headers.split('\n');
-        for (let line of incomeHeaders) {
+        const incomeHeaders = headers.split('\n');
+        for (const line of incomeHeaders) {
             i = line.indexOf(':');
             key = line.slice(0, i).trim().toLowerCase();
             val = line.slice(i + 1).trim();
@@ -460,9 +461,9 @@ export abstract class Transfer {
     }
 
     _runHook(type: hookType, ...args: any[]): void {
-        for (let key in this._hooks) {
+        for (const key in this._hooks) {
             if ( this._hooks.hasOwnProperty( key ) ) {
-                let obj = this._hooks[key];
+                const obj = this._hooks[key];
                 if (obj.type === type) {
                     switch (type) {
                         case hookType.beforeAddingFile:
@@ -496,18 +497,18 @@ export abstract class Transfer {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @private
      * @param {UploaderHook} hook
      * @returns {Boolean}
-     * 
+     *
      * @memberOf Transfer
      */
     private hookExists ( hook: UploaderHook ): number {
-        for (let key in this._hooks) {
+        for (const key in this._hooks) {
             if ( this._hooks.hasOwnProperty( key ) ) {
-                let obj = this._hooks[key];
+                const obj = this._hooks[key];
                 if (
                     (obj.type === hook.type) && ('' + obj.callback === '' + hook.callback)
                 ) {
@@ -519,10 +520,10 @@ export abstract class Transfer {
     }
 
     private filterExists (_filter: FileFilter): number {
-        let filters = <FileFilter[]>this.options.filters;
-        for (let key in filters) {
+        const filters = <FileFilter[]>this.options.filters;
+        for (const key in filters) {
             if ( filters.hasOwnProperty( key ) ) {
-                let obj = filters[key];
+                const obj = filters[key];
                 if ( obj.name === _filter.name ) {
                     return +key;
                 }
