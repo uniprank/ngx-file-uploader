@@ -39,7 +39,7 @@ export class AppComponent implements OnDestroy {
 
         this._subs = this.uploader.queue$.subscribe((data: any) => {
             this.hasFiles = (data.length > 0);
-        }, error => {
+        }, (error: any) => {
             throw new Error(error);
         });
     }

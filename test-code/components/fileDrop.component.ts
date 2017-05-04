@@ -55,14 +55,14 @@ export class FileDropComponent implements OnInit, OnDestroy {
 
         const sub1 = this.uploader.queue$.subscribe( (data: FileManager[]) => {
             this.checkClass();
-        }, error => {
+        }, (error: any) => {
             throw new Error(error);
         });
         this._subs.push(sub1);
 
         const sub2 = this._files$.subscribe( (data: FileManager[]) => {
             this.imageLoaded = (data.length > 0);
-        }, error => {
+        }, (error: any) => {
             throw new Error(error);
         });
         this._subs.push(sub2);

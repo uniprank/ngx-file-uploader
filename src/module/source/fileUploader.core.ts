@@ -24,7 +24,7 @@ export class FileUploader extends Transfer {
                     this._onProgressFile(_file, _data.percent);
                     this._onProgressFileSpeed(_file, _data);
                 }
-            }, error => {
+            }, (error: any) => {
                 throw new Error(error);
             });
             this._subs.push(sub1);
@@ -43,7 +43,7 @@ export class FileUploader extends Transfer {
                     method(gist, _file, response, status, headers);
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
-            }, error => {
+            }, (error: any) => {
                 throw new Error(error);
             });
             this._subs.push(sub2);
@@ -60,7 +60,7 @@ export class FileUploader extends Transfer {
                     uploader._onErrorFile(_file, response, status, headers);
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
-            }, error => {
+            }, (error: any) => {
                 throw new Error(error);
             });
             this._subs.push(sub3);
@@ -77,7 +77,7 @@ export class FileUploader extends Transfer {
                     uploader._onErrorFile(_file, response, status, headers);
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
-            }, error => {
+            }, (error: any) => {
                 throw new Error(error);
             });
             this._subs.push(sub4);
