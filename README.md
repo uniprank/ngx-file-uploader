@@ -1,4 +1,4 @@
-# Angular X File Upload [![Build Status](https://travis-ci.org/uniprank/ngx-file-uploader.svg?branch=master)](https://travis-ci.org/uniprank/ngx-file-uploader)
+# Angular X File Upload [![Build Status](https://travis-ci.org/uniprank/ngxfileuploader.svg?branch=master)](https://travis-ci.org/uniprank/ngxfileuploader)
 
 ---
 
@@ -13,7 +13,7 @@ When files are selected or dropped into the component/directive, one or more fil
 ```
 npm install @uniprank/ngx-file-uploader --save
 ```
-You could find this module in npm like [_angular ngx file uploader_](https://www.npmjs.com/search?q=uniprank%20ngx-file-uploader).
+You could find this module in npm like [_angular ngx file uploader_](https://www.npmjs.com/search?q=uniprank%20ngxfileuploader).
 
 ### Module Dependency
 
@@ -36,15 +36,15 @@ export class ExampleModule {
 </p>
 
 ## Demos
-1. [Simple example](http://uniprank.github.io/ngx-file-uploader/example/#simple)
-2. [Advanced example](http://uniprank.github.io/ngx-file-uploader/example/#advanced)
-3. [FileDrop Component example](http://uniprank.github.io/ngx-file-uploader/example/#filedropexample)
+1. [Simple example](http://uniprank.github.io/ngxfileuploader/example/#simple)
+2. [Advanced example](http://uniprank.github.io/ngxfileuploader/example/#advanced)
+3. [FileDrop Component example](http://uniprank.github.io/ngxfileuploader/example/#filedropexample)
 
 ## More Info
 
-1. [Introduction](https://github.com/uniprank/ngx-file-uploader/wiki/Introduction)
-2. [Module API](https://github.com/uniprank/ngx-file-uploader/wiki/Module-API)
-3. [FAQ](https://github.com/uniprank/ngx-file-uploaderwiki/FAQ)
+1. [Introduction](https://github.com/uniprank/ngxfileuploader/wiki/Introduction)
+2. [Module API](https://github.com/uniprank/ngxfileuploader/wiki/Module-API)
+3. [FAQ](https://github.com/uniprank/ngxfileuploaderwiki/FAQ)
 
 ## Browser compatibility
 You could check out features of target browsers using http://caniuse.com/. For example, the [File API](http://caniuse.com/#feat=fileapi) feature.

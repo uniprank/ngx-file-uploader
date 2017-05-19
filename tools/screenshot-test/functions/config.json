@@ -1,0 +1,9 @@
+{  
+  "firebase": {
+    "apiKey": "AIzaSyBekh5ZSi1vEhaE2qetH4RU91gHmUmpqgg",
+    "authDomain": "ngxfileuploader-screenshots.firebaseapp.com",
+    "databaseURL": "https://ngxfileuploader-screenshots.firebaseio.com",
+    "storageBucket": "ngxfileuploader-screenshots.appspot.com",
+    "messagingSenderId": "975527407245"
+  }
+}

@@ -1,6 +1,6 @@
 import { NgxFileUploaderPage } from './app.po';
 
-describe('ngx-file-uploader App', () => {
+describe('ngxfileuploader App', () => {
   let page: NgxFileUploaderPage;
 
   beforeEach(() => {
