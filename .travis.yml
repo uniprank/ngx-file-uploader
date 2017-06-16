@@ -8,7 +8,7 @@ addons:
   jwt:
     # SAUCE_ACCESS_KEY<=secret for FIREBASE_ACCESS_TOKEN to work around travis-ci/travis-ci#7223, unencrypted value in valentine as FIREBASE_ACCESS_TOKEN>
     # we alias FIREBASE_ACCESS_TOKEN to $SAUCE_ACCESS_KEY in env.sh and set the SAUCE_ACCESS_KEY there
-    - secure: "PKts/IbxuJRWWOEeiGbl8Z9zds0M+hIdCH/g/E4WbQ9yzSvSbdwzfmRfFccQFjxjsrY7+SJMVjsURZy+xUyBpzqgWYHUItnSVqjZb8DlyAU2IXyg8TM9BVLkGGe6k5k4PIFVmfMMMzQwWMM0X0W9w3oYmfHL5egxwSHvf9HIqLolLNXg8sqamIdS5d5KoCXf1c+oRjN/IMBktzNBR6N4OFOZQXVoepXNiIvTWAcTtOPBvFWdKP2n7RVioHKdm4a85aCUpDJp+LYGaLqiQZoRzmzfVTnAhTAPdd4ao5w/+jojrfZIHV55bqYF9rLnQMTneKsiyVNVYJzOLuxmARa/EEKfZld+J3rX4/o4cogrU38YSZF+T7J9g/7CTsnIZ3F6W6m+8iJbIBh55nGOQi5PVe458Q/nGb3fgQd2Z4+6lK9k479H4Ssh/Y7hbVQbepqEVIXzZKqWX6/ZE4iWoR/Q2dm0hySFmmB/R2etixX5JxhnHvgobTYIQ+1liJVp/3YFW1ru64Yg6yz/V291Bhh9g31znmTROCJ/usAmZZaLUqW1TDKnLIMP+M74MF9XERqcWKywXRFwxP4E5uDnx/vAyN49gL+SDfrBUxUtXrTkKZAlglwo9SgA7cOYEPWrionvKcGm87gCBYHFUmXZNQVzh212fpuJYXb/vy0sPDj8La4="
+    - secure: "kRjLueTSiHbqHD6HVUBDhLv05Ehwb+UPGBdxdfHzMndxKaj58kC3o/bHcsWWY4eQXNu6KSSFLHzdj5eoujfBPk+9sX9ZHZbWa9u14ekm3fhaHDGcqQwaitIU6f5L3yF9Zhgz8wpuDSDmUY9LNHhEgBto7YPuJDZRv4DUvqC4Q9hin8y7L+HJE6lO0nxE3t/Yq/pUzaH2rxoEe6fq0sh5E+IsTvBjqw20gjhjYlIZkICL/pU5YYzk6jCh/8PYcZ1NLCTFA4qWoymg8ZLqLsdk8nyrPIsrHqbqF0TaN0UUERc2gfecA4fnQDXK3gAZWM8nlfn7aEUEy1CyKZuMsJbwy8hF5/HzVrZCfZs1/6FhJ1MVcLbr7o8xUDs2n3TIjpxLqUOvnrwTriV2b50VJBtd8vlJmZuNcIXX7n1EBsGzuDfEn+wCiw9pbrJBLYDv4Jtnwnwcvs3ahjLGzs3ogm6UgAuUVYzIHsy8rkCItpQSl9uQid+Gd6BKgmxc6n5yWb9cY8hafi9wkzz5ZebpT44H25eQltsnBTvm8Pr4Cj22MNXWfIl/DWCkn2gvE6vJLrqMaW479ozEFJY7UhgIeK0Y7IUT2FZv4KGjMALUkmiprHPCLbDeZUyLJ/fkMGHbdvVsy4Zj7Bs35diRxAwQoLxKKtbrdUDiJcVwhP52Wuc+ZSg="
 
 branches:
   only:
@@ -17,9 +17,9 @@ branches:
 env:
   global:
   - LOGS_DIR=/tmp/uniprank-ngxfileuploader-build/logs
-  - SAUCE_USERNAME=angular-ci
-  - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
+  - SAUCE_USERNAME=Delomi
+  - BROWSER_STACK_USERNAME=denfie83@gmail.com
+  - BROWSER_STACK_ACCESS_KEY=1K5pAkQmr6u3yBa8qYsA
   - BROWSER_PROVIDER_READY_FILE=/tmp/uniprank-ngxfileuploader-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/uniprank-ngxfileuploader-build/errorfile
 

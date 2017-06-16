@@ -1,7 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Transfer, FileUploader, FileFilter, hookType, UploaderHook } from '../module';
+import { 
+    FileUploader, FileFilter, hookType, UploaderHook
+} from '@uniprank/ngx-file-uploader';
 
 @Component({
     selector: 'app-root',
@@ -36,6 +38,32 @@ export class AppComponent implements OnDestroy {
             },
             0
         ));
+
+        /*
+         *  Send data information  
+         */
+        this.uploader.hook(new UploaderHook(
+            hookType.prepareUploadFile,
+            function(_file: FileManager){
+                _file.bindOptions({
+                    formData: [
+                        {
+                            filename: 'Dynamic Naming'
+                        }
+                    ]
+                });
+            }
+        ));
+
+        this.uploader.onBeforeUpload = (_file: FileManager) => {
+            _file.bindOptions({
+                formData: [
+                    {
+                        filename: 'Dynamic Naming'
+                    }
+                ]
+            });
+        };
 
         this._subs = this.uploader.queue$.subscribe((data: any) => {
             this.hasFiles = (data.length > 0);

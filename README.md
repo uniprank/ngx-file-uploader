@@ -56,3 +56,12 @@ You could check out features of target browsers using http://caniuse.com/. For e
 | Drag-n-drop | - | + | + | + | + |
 | XHR transport (multipart,binary) | - | + | + | + | + |
 | AJAX headers | - | + | + | + | + |
+
+## Cloud testing systems
+
+<p align="center">
+  <a href="https://browserstack.com" target="_blank">
+    <img src="test/browserstack.svg" style="width:280px; height: auto;"/>
+  </a>
+</p>
+Thanks to <a href="https://browserstack.com" target="_blank">BrowserStack</a> for allowing our team to test on thousands of browsers.

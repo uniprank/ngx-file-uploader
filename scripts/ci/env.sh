@@ -8,5 +8,5 @@ if [[ ${TRAVIS:-} ]]; then
   export FIREBASE_ACCESS_TOKEN=${FIREBASE_ACCESS_TOKEN:-$SAUCE_ACCESS_KEY}
 
   # - we overwrite the value set by Travis JWT addon here to work around travis-ci/travis-ci#7223 for FIREBASE_ACCESS_TOKEN
-  export SAUCE_ACCESS_KEY=9b988f434ff8-fbca-8aa4-4ae3-35442987
+  export SAUCE_ACCESS_KEY=d21397e6-230b-4985-9b41-7b8ca74294cf
 fi
