@@ -24,7 +24,7 @@ You could find this module in npm like [_angular ngx file uploader_](https://www
 
 ### Module Dependency
 
-Add `import { FileUploaderModule } from '@uniprank/ngx-file-uploader';` to your module header:
+Add `import { NgxFileUploaderModule } from '@uniprank/ngx-file-uploader';` to your module header:
 
 ```
 @NgModule({
@@ -44,9 +44,9 @@ export class ExampleModule {
 
 ## Demos
 
-1. [Simple example](http://uniprank.github.io/ngx-file-uploader/#test-case-1)
-2. [Advanced example](http://uniprank.github.io/ngx-file-uploader/example/#advanced)
-3. [FileDrop Component example](http://uniprank.github.io/ngx-file-uploader/example/#filedropexample)
+1. [Simple example](https://uniprank.github.io/ngx-file-uploader#test-case-1)
+2. [Advanced example](https://uniprank.github.io/ngx-file-uploader#test-case-1)
+3. [FileDrop Component example](https://uniprank.github.io/ngx-file-uploader#test-case-1)
 
 ## More Info
 
@@ -70,7 +70,7 @@ You could check out features of target browsers using http://caniuse.com/. For e
 
 <p align="center">
   <a href="https://browserstack.com" target="_blank">
-    <img src="https://uniprank.github.io/ngx-file-uploader/test/browserstack.svg?w=280px&h=auto" style="width:280px; height: auto;"/>
+    <img src="library/TestCases/src/assets/browserstack.svg" style="width:280px; height: auto;"/>
   </a>
 </p>
 Thanks to <a href="https://browserstack.com" target="_blank">BrowserStack</a> for allowing our team to test on thousands of browsers.
