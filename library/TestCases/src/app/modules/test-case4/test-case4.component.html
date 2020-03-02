@@ -1,0 +1,11 @@
+<markdown>{{ markdown }}</markdown>
+<h2>Example</h2>
+<div class="template">
+    <app-inner-test [sections]="sections"></app-inner-test>
+    <div>
+        <section *ngFor="let section of sections; let i=index" [uniScrollSpy]="section.id"
+            [ngClass]="['section' + ((i+1)%5)]">
+            <h2 [innerHtml]="section.name"></h2>
+        </section>
+    </div>
+</div>

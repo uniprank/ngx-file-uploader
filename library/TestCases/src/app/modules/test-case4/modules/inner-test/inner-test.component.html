@@ -1,0 +1,9 @@
+<nav class="sticky">
+    <ul>
+        <li *ngFor="let section of showSection; let i=index" [ngClass]="{base: section.base}">
+            <a *ngIf="section.id != null" [uniScrollItem]="section.id" [innerHtml]="section.name"
+                href="#{{section.id}}"></a>
+            <span *ngIf="section.id == null" [innerHtml]="section.name"></span>
+        </li>
+    </ul>
+</nav>

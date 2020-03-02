@@ -1,0 +1,33 @@
+@import '~library/TestCases/src/styles/library';
+
+:host {
+    display: block;
+    padding: 1rem;
+
+    nav {
+        position: fixed;
+        top: 50%;
+        right: 0;
+        background-color: $orange;
+        transform: translateY(-50%);
+
+        ul {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+
+            li {
+                list-style: none;
+                margin: 0;
+                padding: 1rem;
+                color: $font-color-invert;
+
+                &.active {
+                    color: $orange;
+                    background-color: white;
+                }
+            }
+        }
+    }
+}

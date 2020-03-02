@@ -1,0 +1,72 @@
+@import '~library/TestCases/src/styles/library';
+
+:host {
+    display: block;
+
+    nav {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 68px;
+
+        ul {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+
+            li {
+                list-style: none;
+                margin: 0;
+                padding: 2px 0;
+                color: $font-color;
+
+                &.base {
+                    margin: 4px 0;
+                    position: relative;
+
+                    &::before {
+                        background: rgba(0, 0, 0, .14);
+                        content: "";
+                        display: block;
+                        height: 1px;
+                        width: 96%;
+                        z-index: -1;
+                        position: absolute;
+                        top: 11px;
+                    }
+
+                    span {
+                        background: #fff;
+                        padding-right: 8px;
+                        text-transform: uppercase;
+                    }
+                }
+
+                a {
+                    background-color: transparent;
+                    -webkit-tap-highlight-color: transparent;
+                    text-decoration: none;
+
+                    font-weight: 300;
+                    color: #757575;
+                    padding-left: 20px;
+                    height: 1.5rem;
+                    line-height: 1.5rem;
+                    letter-spacing: .4;
+                    display: inline-block;
+
+                    &.active {
+                        font-weight: 500;
+                        padding-left: 18px;
+                        border-left: 2px solid #ee6e73;
+                    }
+                }
+
+                &.active {
+                    color: $orange;
+                    background-color: white;
+                }
+            }
+        }
+    }
+}

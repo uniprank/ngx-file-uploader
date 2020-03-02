@@ -1,0 +1,26 @@
+<markdown>{{ markdown }}</markdown>
+<h2>Example</h2>
+<nav>
+    <ul>
+        <li uniScrollItem="section1">Section 1</li>
+        <li uniScrollItem="section2">Section 2</li>
+        <li uniScrollItem="section3">Section 3</li>
+        <li uniScrollItem="section4">Section 4</li>
+        <li>Active Section: [
+            <span [innerHtml]="(activeSection | async).id"></span>,
+            <span [innerHtml]="(activeSection | async).elementId"></span>
+            ]</li>
+    </ul>
+</nav>
+<section uniScrollSpy="section1" class="section1">
+
+</section>
+<section uniScrollSpy="section2" class="section2">
+
+</section>
+<section uniScrollSpy="section3" class="section3">
+
+</section>
+<section uniScrollSpy="section4" class="section4">
+
+</section>

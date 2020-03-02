@@ -1,0 +1,31 @@
+@import '~library/TestCases/src/styles/library';
+
+:host {
+    display: block;
+
+    header {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        max-height: 50px;
+        overflow: hidden;
+        z-index: 100;
+
+        nav {
+            background-color: $blue;
+            display: flex;
+            flex-direction: row;
+
+            a {
+                padding: 1rem;
+                color: rgba($font-color-invert, .8);
+                text-decoration: none;
+
+                &.router-link-active {
+                    color: $font-color-invert;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

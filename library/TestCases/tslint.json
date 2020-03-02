@@ -1,0 +1,25 @@
+{
+    "extends": "../../tslint.json",
+    "rules": {
+        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
+        "object-literal-shorthand": false,
+        "no-angle-bracket-type-assertion": false,
+        "whitespace": [true, "check-branch", "check-operator", "check-type-operator"],
+        "no-string-literal": false,
+        "one-variable-per-declaration": false,
+        "no-conditional-assignment": false,
+        "no-bitwise": false,
+        "directive-selector": [
+            true,
+            "attribute",
+            "uni",
+            "camelCase"
+        ],
+        "component-selector": [
+            true,
+            "element",
+            "uni",
+            "kebab-case"
+        ]
+    }
+}

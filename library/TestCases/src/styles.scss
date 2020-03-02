@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900');
+@import "./styles/bulma";
+
+html,
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    // color: #141823;
+    color: #292f33;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    padding: 1rem;
+    padding-bottom: .2rem;
+}
+
+h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+h3 {
+    font-size: 1.3rem;
+    font-weight: 300;
+}
+
+h4 {
+    font-size: 1.1rem;
+    font-weight: 100;
+}
+
+pre[class*="language-"] {
+    border-radius: 0 !important;
+}
+
+div.panel {
+    padding: 0 1em 1em 1em;
+}
+
+button {
+    margin-right: 1em;
+}

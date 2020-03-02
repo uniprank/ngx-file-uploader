@@ -1,0 +1,162 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "library",
+    "projects": {
+        "NgxFileUploader": {
+            "projectType": "library",
+            "root": "library/ngx-file-uploader",
+            "sourceRoot": "library/ngx-file-uploader/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "options": {
+                        "tsConfig": "library/ngx-file-uploader/tsconfig.lib.json",
+                        "project": "library/ngx-file-uploader/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "library/ngx-file-uploader/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "library/ngx-file-uploader/src/test.ts",
+                        "tsConfig": "library/ngx-file-uploader/tsconfig.spec.json",
+                        "karmaConfig": "library/ngx-file-uploader/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "library/ngx-file-uploader/tsconfig.lib.json",
+                            "library/ngx-file-uploader/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        },
+        "TestCases": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "library/TestCases",
+            "sourceRoot": "library/TestCases/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "baseHref": "/ngx-file-uploader/test-cases/",
+                        "outputPath": "docs/test-cases",
+                        "index": "library/TestCases/src/index.html",
+                        "main": "library/TestCases/src/main.ts",
+                        "polyfills": "library/TestCases/src/polyfills.ts",
+                        "tsConfig": "library/TestCases/tsconfig.app.json",
+                        "aot": true,
+                        "assets": [
+                            "library/TestCases/src/favicon.ico",
+                            "library/TestCases/src/assets"
+                        ],
+                        "styles": [
+                            "library/TestCases/src/styles.scss",
+                            "node_modules/prismjs/themes/prism-solarizedlight.css"
+                        ],
+                        "scripts": [
+                            "node_modules/marked/lib/marked.js",
+                            "node_modules/prismjs/prism.js",
+                            "node_modules/prismjs/components/prism-typescript.min.js",
+                            "node_modules/prismjs/components/prism-css.min.js"
+                        ],
+                        "es5BrowserSupport": true
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [{
+                                "replace": "library/TestCases/src/environments/environment.ts",
+                                "with": "library/TestCases/src/environments/environment.prod.ts"
+                            }],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [{
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "TestCases:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "TestCases:build:production"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "TestCases:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "library/TestCases/src/test.ts",
+                        "polyfills": "library/TestCases/src/polyfills.ts",
+                        "tsConfig": "library/TestCases/tsconfig.spec.json",
+                        "karmaConfig": "library/TestCases/karma.conf.js",
+                        "assets": [
+                            "library/TestCases/src/favicon.ico",
+                            "library/TestCases/src/assets"
+                        ],
+                        "styles": [
+                            "library/TestCases/src/styles.scss"
+                        ],
+                        "scripts": []
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "library/TestCases/tsconfig.app.json",
+                            "library/TestCases/tsconfig.spec.json",
+                            "library/TestCases/e2e/tsconfig.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "defaultProject": "NgxFileUploader"
+}
