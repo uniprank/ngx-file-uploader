@@ -57,8 +57,8 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "baseHref": "/ngx-file-uploader/test-cases/",
-                        "outputPath": "docs/test-cases",
+                        "baseHref": "/ngx-file-uploader",
+                        "outputPath": "docs",
                         "index": "library/TestCases/src/index.html",
                         "main": "library/TestCases/src/main.ts",
                         "polyfills": "library/TestCases/src/polyfills.ts",
