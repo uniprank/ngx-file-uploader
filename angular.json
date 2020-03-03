@@ -66,7 +66,12 @@
                         "aot": true,
                         "assets": [
                             "library/TestCases/src/favicon.ico",
-                            "library/TestCases/src/assets"
+                            "library/TestCases/src/assets",
+                            {
+                                "glob": "404.html",
+                                "input": "library/TestCases/src/",
+                                "output": "./"
+                            }
                         ],
                         "styles": [
                             "library/TestCases/src/styles.scss",

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>404 Error Page</title>
+    <script>
+        const path = window.location.pathname.slice(1).split('/');
+        const application = path.shift()
+        localStorage.setItem('path', path.join('/'));
+        window.location.href = '/' + application;
+
+    </script>
+</head>
+
+<body></body>
+
+</html>
