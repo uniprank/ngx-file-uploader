@@ -44,9 +44,9 @@ export class ExampleModule {
 
 ## Demos
 
-1. [Simple example](https://uniprank.github.io/ngx-file-uploader#test-case-1)
-2. [Advanced example](https://uniprank.github.io/ngx-file-uploader#test-case-1)
-3. [FileDrop Component example](https://uniprank.github.io/ngx-file-uploader#test-case-1)
+1. [Simple example](https://uniprank.github.io/ngx-file-uploader/test-case-1)
+2. [Advanced example](https://uniprank.github.io/ngx-file-uploader/test-case-1)
+3. [FileDrop Component example](https://uniprank.github.io/ngx-file-uploader/test-case-1)
 
 ## More Info
 
