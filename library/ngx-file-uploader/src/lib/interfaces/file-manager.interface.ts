@@ -1,12 +1,12 @@
 import { Observable } from 'rxjs';
 
-import { FileManagerOptions } from './file-manager-options.interface';
+import { FileManagerOptionsInterface } from './file-manager-options.interface';
 import { FileObject } from '../classes/file-object.class';
 import { TransferInterface } from './transfer.interface';
 
 export interface FileManagerInterface {
     id: string;
-    options: FileManagerOptions;
+    options: FileManagerOptionsInterface;
     progressPercent$: Observable<number>;
     progress$: Observable<any>;
     progress: any;
@@ -23,7 +23,7 @@ export interface FileManagerInterface {
     protocol(_protocol: any): void;
 
     bindUploader(_uploader: TransferInterface<FileManagerInterface>): void;
-    bindOptions(_options: FileManagerOptions): void;
+    bindOptions(_options: FileManagerOptionsInterface): void;
 
     getUploader(): TransferInterface<FileManagerInterface>;
     upload(): void;

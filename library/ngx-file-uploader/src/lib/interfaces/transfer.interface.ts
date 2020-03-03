@@ -1,5 +1,5 @@
 import { TransferOptionsInterface } from './transfer-options.interface';
-import { FileManagerOptions } from './file-manager-options.interface';
+import { FileManagerOptionsInterface } from './file-manager-options.interface';
 
 import { Observable } from 'rxjs';
 import { UploaderHook, HookTypeEnum } from '../classes/uploader-hook.class';
@@ -18,13 +18,13 @@ export interface TransferInterface<T> {
     isHTML5(): boolean;
     isDragAndDrop(): boolean;
 
-    createDummy(fileElement: any, options: FileManagerOptions): T;
+    createDummy(fileElement: any, options: FileManagerOptionsInterface): T;
 
     hook(hook: UploaderHook);
     removeHook(hook: UploaderHook): boolean;
     activeHooks(): string[];
 
-    addFilesToQueue(files: any, options?: FileManagerOptions): T[];
+    addFilesToQueue(files: any, options?: FileManagerOptionsInterface): T[];
     addFilter(filter: FileFilter): void;
 
     addFile(file: T): boolean;

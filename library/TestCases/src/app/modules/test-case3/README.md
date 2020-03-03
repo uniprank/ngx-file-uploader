@@ -1,61 +1,68 @@
-You can find the complete test case at GitHub. [Test Case 3](https://github.com/uniprank/ngx-scrollspy/tree/master/library/TestCases/src/app/modules/test-case3)
+# Components
 
-## TestCase3Component
+You can find the complete test case at GitHub. [Test Case](https://github.com/uniprank/ngx-file-uploader/tree/master/library/TestCases/src/app/modules/test-case1)
 
-```js
+## Default setup for components
+
+```typescript
+...
+
+import { FileUploader, FileFilter } from '@uniprank/ngx-file-uploader';
+
 @Component({
-    selector: 'app-test-case3',
-    templateUrl: './test-case3.component.html',
-    styleUrls: ['./test-case3.component.scss']
+    selector: 'uni-test-case1',
+    templateUrl: './test-case1.component.html',
+    styleUrls: ['./test-case1.component.scss']
 })
-export class TestCase3Component implements OnInit, OnDestroy {
-    public activeSection: BehaviorSubject<{ id?: string; elementId?: string; nativeElement?: HTMLElement }> = new BehaviorSubject({});
+export class TestCase1Component {
+    public uploader: FileUploader;
 
-    private _subscription: Subscription;
-
-    constructor(private _scrollSpyService: ScrollSpyService) {}
-
-    ngOnInit() {
-        // set offset because 2 sticky menu bars width single height of 50px
-        this._scrollSpyService.setOffset('window', 100);
-        // subscribe to window scroll listener, it is also possible to use an ScrollSpyElement id
-        this._subscription = this._scrollSpyService.observe('window').subscribe(item => {
-            if (item != null) {
-                const _nextSection = {
-                    id: item.id,
-                    elementId: item.scrollElementId
-                };
-                this.activeSection.next(_nextSection);
-                console.info(`ScrollSpyService: item:`, item);
-            }
+    constructor() {
+        this.uploader = new FileUploader({
+            url: 'https://api.uniprank.com/imageupload/api/upload',
+            removeBySuccess: false,
+            autoUpload: false,
+            filters: [new FileFilter('only:JPG/PNG/GIF', new RegExp('image/jpeg|image/png|image/gif'), 'type')]
         });
-    }
-
-    ngOnDestroy() {
-        if (this._subscription) {
-            this._subscription.unsubscribe();
-        }
     }
 }
 ```
 
-## TestCase3Component HTML
+Or maybe use the **FileUploadService** to get the uploader for our directives.
 
-```html
-<nav>
-    <ul>
-        <li uniScrollItem="section1">Section 1</li>
-        <li uniScrollItem="section2">Section 2</li>
-        <li uniScrollItem="section3">Section 3</li>
-        <li uniScrollItem="section4">Section 4</li>
-        <li>
-            Active Section: [ <span [innerHtml]="(activeSection | async).id"></span>,
-            <span [innerHtml]="(activeSection | async).elementId"></span> ]
-        </li>
-    </ul>
-</nav>
-<section uniScrollSpy="section1"></section>
-<section uniScrollSpy="section2"></section>
-<section uniScrollSpy="section3"></section>
-<section uniScrollSpy="section4"></section>
+```typescript
+...
+
+import { FileUploadService, FileUploader, FileFilter } from '@uniprank/ngx-file-uploader';
+
+@Component({
+    selector: 'uni-test-case2',
+    templateUrl: './test-case2.component.html',
+    styleUrls: ['./test-case2.component.scss']
+})
+export class TestCase2Component implements OnInit {
+    public uploader: FileUploader;
+
+    constructor(private _fileUploadService: FileUploadService) {}
+
+    ngOnInit(){
+        try {
+            // This works only if the forRoot was defined with a default configuration
+            this.uploader = this._fileUploadService.getUploader('default');
+        }catch(e) {
+            // You can define a default uploader when the config wasn't set globaly
+            this._fileUploadService.registerUploadService(
+                'default',
+                new FileUploader({
+                    url: 'https://api.uniprank.com/imageupload/api/upload',
+                    removeBySuccess: false,
+                    autoUpload: false,
+                    filters: [new FileFilter('only:JPG/PNG/GIF', new RegExp('image/jpeg|image/png|image/gif'), 'type')]
+                })
+            );
+            this._fileUploadService.useAngularProtocol('default');
+            this.uploader = this._fileUploadService.getUploader('default');
+        }
+    }
+}
 ```

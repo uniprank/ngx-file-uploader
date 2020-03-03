@@ -7,10 +7,9 @@ import { NgxFileUploaderModule } from '@uniprank/ngx-file-uploader';
 
 import { TestCase5RoutingModule } from './test-case5-routing.module';
 import { TestCase5Component } from './test-case5.component';
-import { InnerTestModule } from './modules/inner-test/inner-test.module';
 
 @NgModule({
     declarations: [TestCase5Component],
-    imports: [CommonModule, MarkdownModule, TestCase5RoutingModule, NgxFileUploaderModule.forRoot(), InnerTestModule]
+    imports: [CommonModule, MarkdownModule, TestCase5RoutingModule, NgxFileUploaderModule.forRoot()]
 })
 export class TestCase5Module {}

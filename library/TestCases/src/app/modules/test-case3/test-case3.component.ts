@@ -14,17 +14,9 @@ export class TestCase3Component implements OnInit, OnDestroy {
     public markdown = require('raw-loader!./README.md');
     public activeSection: BehaviorSubject<{ id?: string; elementId?: string; nativeElement?: HTMLElement }> = new BehaviorSubject({});
 
-    private _subscription: Subscription;
-
     constructor(private _host: ElementRef) {}
 
-    ngOnInit() {
-        Stickyfill.add(this._host.nativeElement.querySelector('nav'));
-    }
+    ngOnInit() {}
 
-    ngOnDestroy() {
-        if (this._subscription) {
-            this._subscription.unsubscribe();
-        }
-    }
+    ngOnDestroy() {}
 }

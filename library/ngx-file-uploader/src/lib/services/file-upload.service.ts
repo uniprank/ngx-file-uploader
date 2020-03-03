@@ -1,7 +1,7 @@
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Transfer, HookTypeEnum, UploaderHook, FileManager, ProtocolXHR } from '../classes';
+import { Transfer, HookTypeEnum, UploaderHook, FileManager, ProtocolXHR, FileUploader } from '../classes';
 import { TransferOptionsInterface } from '../interfaces';
 import { AngularFileUploadProtocol } from './angular-file-upload.protocol';
 
@@ -15,7 +15,12 @@ export const FILE_UPLOADER_CONFIG = new InjectionToken<TransferOptionsInterface>
 export class FileUploadService {
     private _uploadServices: { [key: string]: UploadServiceInterface } = {};
 
-    constructor(private _httpClient: HttpClient, @Inject(FILE_UPLOADER_CONFIG) @Optional() private _config?: TransferOptionsInterface) {}
+    constructor(private _httpClient: HttpClient, @Inject(FILE_UPLOADER_CONFIG) @Optional() private _config?: TransferOptionsInterface) {
+        if (_config && _config.url) {
+            this.registerUploadService('default', new FileUploader(_config));
+            this.useAngularProtocol('default');
+        }
+    }
 
     public registerUploadService(uploaderKey: string, uploader: Transfer): void {
         if (this._uploadServices[uploaderKey] != null) {

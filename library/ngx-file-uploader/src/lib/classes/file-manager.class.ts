@@ -1,13 +1,13 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { TransferInterface } from '../interfaces/transfer.interface';
-import { FileManagerOptions } from '../interfaces/file-manager-options.interface';
+import { FileManagerOptionsInterface } from '../interfaces/file-manager-options.interface';
 import { FileManagerInterface } from '../interfaces/file-manager.interface';
 
 import { FileObject } from './file-object.class';
 import { Utils } from './utils.class';
 
-const FileManagerOptionsDefault: FileManagerOptions = {};
+const FileManagerOptionsDefault: FileManagerOptionsInterface = {};
 
 const speedObject: any = {
     total: 0,
@@ -18,7 +18,7 @@ const speedObject: any = {
 };
 
 export class FileManager implements FileManagerInterface {
-    public options: FileManagerOptions;
+    public options: FileManagerOptionsInterface;
 
     private _id: string;
     private _protocol: any;
@@ -104,7 +104,7 @@ export class FileManager implements FileManagerInterface {
      *
      * @memberOf FileManager
      */
-    constructor(file: any, options?: FileManagerOptions, uploader?: TransferInterface<FileManagerInterface>) {
+    constructor(file: any, options?: FileManagerOptionsInterface, uploader?: TransferInterface<FileManagerInterface>) {
         this.options = Object.assign({}, FileManagerOptionsDefault, options);
         this._speedDefault = {};
 
@@ -144,7 +144,7 @@ export class FileManager implements FileManagerInterface {
      *
      * @memberOf FileManager
      */
-    public bindOptions(options: FileManagerOptions): void {
+    public bindOptions(options: FileManagerOptionsInterface): void {
         const _formData = { ...this.options.formData, ...options?.formData };
         this.options = { ...this.options, ...options, ...{ formData: _formData } };
     }

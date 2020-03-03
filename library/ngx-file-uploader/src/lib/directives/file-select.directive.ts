@@ -2,7 +2,7 @@
 // tslint:disable:no-unused-expression
 import { Directive, EventEmitter, HostListener, HostBinding, Output, Input, OnInit, OnDestroy } from '@angular/core';
 import { FileManager } from '../classes/file-manager.class';
-import { FileManagerOptions, instanceOfFileManagerInterface, FileManagerInterface, TransferInterface } from '../interfaces';
+import { FileManagerOptionsInterface, instanceOfFileManagerInterface, FileManagerInterface, TransferInterface } from '../interfaces';
 
 //
 // Directive to support select file from inputfield
@@ -26,7 +26,7 @@ export class FileSelectDirective implements OnInit, OnDestroy {
     public fileRejected: EventEmitter<Error> = new EventEmitter<Error>();
 
     @Input()
-    public fileOptions: FileManagerOptions;
+    public fileOptions: FileManagerOptionsInterface;
     @Input()
     public uploader: TransferInterface<FileManagerInterface>;
 

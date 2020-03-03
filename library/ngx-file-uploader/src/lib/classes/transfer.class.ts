@@ -3,7 +3,7 @@ import { Utils } from './utils.class';
 import { Protocol } from './protocol.class';
 import { HookTypeEnum, UploaderHook } from './uploader-hook.class';
 import { FileFilter } from './file-filter.class';
-import { FileManagerOptions, TransferOptionsInterface } from '../interfaces';
+import { FileManagerOptionsInterface, TransferOptionsInterface } from '../interfaces';
 import { TransferInterface } from '../interfaces/transfer.interface';
 import { FileManagerInterface, instanceOfFileManagerInterface } from '../interfaces/file-manager.interface';
 import { take, map } from 'rxjs/operators';
@@ -19,7 +19,6 @@ const TransferOptionsDefault: TransferOptionsInterface = {
     autoUpload: false,
     method: 'POST',
     removeBySuccess: false,
-    queueLimit: -1,
     enableCors: false,
     withCredentials: false,
     uniqueFiles: false
@@ -160,7 +159,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
      *
      * @memberOf Transfer
      */
-    public addFilesToQueue(files: any, options?: FileManagerOptions): FileManagerInterface[] {
+    public addFilesToQueue(files: any, options?: FileManagerOptionsInterface): FileManagerInterface[] {
         const _retFiles: FileManagerInterface[] = [];
         let _dummyFile: FileManagerInterface;
         let _check = false;
@@ -543,5 +542,5 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
 
     public abstract init(): void;
     public abstract destroy(): void;
-    public abstract createDummy(fileElement: any, options: FileManagerOptions): FileManagerInterface;
+    public abstract createDummy(fileElement: any, options: FileManagerOptionsInterface): FileManagerInterface;
 }

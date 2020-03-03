@@ -32,13 +32,8 @@
                 "lint": {
                     "builder": "@angular-devkit/build-angular:tslint",
                     "options": {
-                        "tsConfig": [
-                            "library/ngx-file-uploader/tsconfig.lib.json",
-                            "library/ngx-file-uploader/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
+                        "tsConfig": ["library/ngx-file-uploader/tsconfig.lib.json", "library/ngx-file-uploader/tsconfig.spec.json"],
+                        "exclude": ["**/node_modules/**"]
                     }
                 }
             }
@@ -75,22 +70,26 @@
                         ],
                         "styles": [
                             "library/TestCases/src/styles.scss",
-                            "node_modules/prismjs/themes/prism-solarizedlight.css"
+                            "node_modules/github-markdown-css/github-markdown.css",
+                            "node_modules/prism-themes/themes/prism-dracula.css"
                         ],
                         "scripts": [
                             "node_modules/marked/lib/marked.js",
                             "node_modules/prismjs/prism.js",
                             "node_modules/prismjs/components/prism-typescript.min.js",
-                            "node_modules/prismjs/components/prism-css.min.js"
+                            "node_modules/prismjs/components/prism-css.min.js",
+                            "node_modules/prismjs/components/prism-shell-session.min.js"
                         ],
                         "es5BrowserSupport": true
                     },
                     "configurations": {
                         "production": {
-                            "fileReplacements": [{
-                                "replace": "library/TestCases/src/environments/environment.ts",
-                                "with": "library/TestCases/src/environments/environment.prod.ts"
-                            }],
+                            "fileReplacements": [
+                                {
+                                    "replace": "library/TestCases/src/environments/environment.ts",
+                                    "with": "library/TestCases/src/environments/environment.prod.ts"
+                                }
+                            ],
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
@@ -99,7 +98,8 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
-                            "budgets": [{
+                            "budgets": [
+                                {
                                     "type": "initial",
                                     "maximumWarning": "2mb",
                                     "maximumError": "5mb"
@@ -137,13 +137,8 @@
                         "polyfills": "library/TestCases/src/polyfills.ts",
                         "tsConfig": "library/TestCases/tsconfig.spec.json",
                         "karmaConfig": "library/TestCases/karma.conf.js",
-                        "assets": [
-                            "library/TestCases/src/favicon.ico",
-                            "library/TestCases/src/assets"
-                        ],
-                        "styles": [
-                            "library/TestCases/src/styles.scss"
-                        ],
+                        "assets": ["library/TestCases/src/favicon.ico", "library/TestCases/src/assets"],
+                        "styles": ["library/TestCases/src/styles.scss"],
                         "scripts": []
                     }
                 },
@@ -155,9 +150,7 @@
                             "library/TestCases/tsconfig.spec.json",
                             "library/TestCases/e2e/tsconfig.json"
                         ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
+                        "exclude": ["**/node_modules/**"]
                     }
                 }
             }

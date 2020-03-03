@@ -2,7 +2,7 @@ import { Protocol, ProtocolXHR } from './protocol.class';
 import { Subscription } from 'rxjs';
 import { Transfer } from './transfer.class';
 import { FileManager } from './file-manager.class';
-import { TransferOptionsInterface, FileManagerOptions } from '../interfaces';
+import { TransferOptionsInterface, FileManagerOptionsInterface } from '../interfaces';
 import { TransferInterface } from '../interfaces/transfer.interface';
 import { FileManagerInterface, instanceOfFileManagerInterface } from '../interfaces/file-manager.interface';
 
@@ -89,7 +89,7 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
         this._subs.push(sub4);
     }
 
-    public createDummy(fileElement: any, options: FileManagerOptions): FileManager {
+    public createDummy(fileElement: any, options: FileManagerOptionsInterface): FileManager {
         return new FileManager(fileElement, options, this);
     }
 

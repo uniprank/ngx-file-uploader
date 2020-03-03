@@ -2,7 +2,7 @@
 // tslint:disable:no-unused-expression
 import { Directive, EventEmitter, ElementRef, Renderer2, HostListener, Output, Input, OnInit, OnDestroy } from '@angular/core';
 import { FileManager } from '../classes/file-manager.class';
-import { FileManagerOptions, FileManagerInterface, TransferInterface, instanceOfFileManagerInterface } from '../interfaces';
+import { FileManagerOptionsInterface, FileManagerInterface, TransferInterface, instanceOfFileManagerInterface } from '../interfaces';
 
 //
 // Directive to support dragging and dropping and element onto a div
@@ -23,7 +23,7 @@ export class FileDropDirective implements OnInit, OnDestroy {
     public fileRejected: EventEmitter<Error> = new EventEmitter<Error>();
 
     @Input()
-    public fileOptions: FileManagerOptions;
+    public fileOptions: FileManagerOptionsInterface;
     @Input()
     public uploader: TransferInterface<FileManagerInterface>;
 

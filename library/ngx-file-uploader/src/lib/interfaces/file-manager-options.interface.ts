@@ -1,6 +1,5 @@
-export interface FileManagerOptions {
-    // for all settings (default: use url from TransferOptions) if empty
-    // Path to server where the file be uploaded
+export interface FileManagerOptionsInterface {
+    // Path to server to which the file should be uploaded
     url?: string;
     // File alias default is `file`
     alias?: string;
@@ -14,6 +13,6 @@ export interface FileManagerOptions {
     removeBySuccess?: boolean;
     // Activate CORS - HTML5 only
     enableCors?: boolean;
-    // With credentials
+    // if you need credentials for the communication you can activate this option here
     withCredentials?: any;
 }

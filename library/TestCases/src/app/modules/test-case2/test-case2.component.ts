@@ -15,7 +15,5 @@ export class TestCase2Component implements OnInit {
 
     constructor(private _host: ElementRef, private _fileUploadService: FileUploadService) {}
 
-    ngOnInit() {
-        Stickyfill.add(this._host.nativeElement.querySelector('nav'));
-    }
+    ngOnInit() {}
 }
