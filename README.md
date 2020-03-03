@@ -39,7 +39,7 @@ export class ExampleModule {
 ```
 
 <p align="center">
-  <img src="library/TestCases/src/assets/test-case-1.png" style="width:100%; height: auto;"/>
+  <img src="https://uniprank.github.io/ngx-file-uploader/assets/test-case-1.png" style="width:100%; height: auto;"/>
 </p>
 
 ## Demos
