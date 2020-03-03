@@ -70,7 +70,7 @@ You could check out features of target browsers using http://caniuse.com/. For e
 
 <p align="center">
   <a href="https://browserstack.com" target="_blank">
-    <img src="library/TestCases/src/assets/browserstack.svg" style="max-width:480px"/>
+    <img src="https://uniprank.github.io/ngx-file-uploader/assets/browserstack.svg" style="max-width:480px"/>
   </a>
 </p>
 Thanks to <a href="https://browserstack.com" target="_blank">BrowserStack</a> for allowing our team to test on thousands of browsers.
