@@ -1,0 +1,33 @@
+language: node_js
+sudo: false
+
+node_js:
+  - 12.16.1
+
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - LOGS_DIR=/tmp/uniprank-ngxfileuploader-build/logs
+    - BROWSER_STACK_USERNAME=denfie83@gmail.com
+    - BROWSER_STACK_ACCESS_KEY=1K5pAkQmr6u3yBa8qYsA
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: 'MODE=saucelabs_optional'
+    - env: 'MODE=browserstack_optional'
+
+install:
+  - npm install
+
+script:
+  - npm run build
+  - npm run test
+
+cache:
+  directories:
+    - node_modules
+    - $HOME/.pub-cache
