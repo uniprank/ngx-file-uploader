@@ -8,12 +8,6 @@ branches:
   only:
     - master
 
-env:
-  global:
-    - LOGS_DIR=/tmp/uniprank-ngxfileuploader-build/logs
-    - BROWSER_STACK_USERNAME=denfie83@gmail.com
-    - BROWSER_STACK_ACCESS_KEY=1K5pAkQmr6u3yBa8qYsA
-
 addons:
   apt:
     packages:
