@@ -1,3 +1,5 @@
+[![travis build](https://img.shields.io/travis/uniprank/ngx-file-uploader?label=Travis%3Abuild&style=flat-square)](https://travis-ci.org/uniprank/ngx-file-uploader)
+
 # Angular File Upload
 
 ---
