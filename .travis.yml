@@ -29,7 +29,7 @@ script:
   - npm run test:travis
 
 after_success:
-  - codecov
+  - codecov -t $CODECOV_TOKEN
 
 cache:
   directories:
