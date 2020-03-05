@@ -20,12 +20,16 @@ matrix:
     - env: 'MODE=browserstack_optional'
 
 install:
+  - npm install codecov -g
   - npm install
 
 script:
   - npm run lint
   - npm run build
   - npm run test:travis
+
+after_success:
+  - codecov
 
 cache:
   directories:

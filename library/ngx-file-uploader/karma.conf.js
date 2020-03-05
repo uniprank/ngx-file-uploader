@@ -1,7 +1,7 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -17,8 +17,8 @@ module.exports = function(config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage/ngx-file-uploader'),
-      reports: ['html', 'cobertura', 'lcovonly'],
+      dir: require('path').join(__dirname, '../../coverage'),
+      reports: ['html', 'cobertura', 'lcovonly', 'json'],
       fixWebpackSourcePaths: true
     },
     reporters: ['progress', 'junit', 'kjhtml'],
@@ -37,7 +37,7 @@ module.exports = function(config) {
       }
     },
     junitReporter: {
-      outputDir: require('path').join(__dirname, '../../coverage/ngx-file-uploader/test-reports-junit'), // results will be saved to testreports directory
+      outputDir: require('path').join(__dirname, '../../coverage/test-reports-junit'), // results will be saved to testreports directory
       outputFile: 'test-results.xml', // results will be saved to test-results.xml
       useBrowserName: false
     }
