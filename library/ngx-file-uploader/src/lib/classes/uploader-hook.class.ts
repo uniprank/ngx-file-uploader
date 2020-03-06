@@ -27,7 +27,7 @@ export class UploaderHook {
         return this._priority;
     }
 
-    public get callback(): () => void | null {
+    public get callback(): (...args) => void | null {
         return this._callback;
     }
 

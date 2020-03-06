@@ -2,9 +2,11 @@ import { DatePipe } from '@angular/common';
 import { FileManagerInterface } from '../interfaces/file-manager.interface';
 
 export enum filterType {
-    regex,
-    callback
+    regex = 'regex',
+    callback = 'callback'
 }
+
+export type fileRegExpType = 'name' | 'type' | 'date';
 
 export class FileFilter {
     public get name(): string {
@@ -18,10 +20,10 @@ export class FileFilter {
     private _name = '';
     private _regex: RegExp | null = null;
     private _regCheck: string | null = null;
-    private _callback: (...args) => boolean | null = null;
+    private _callback: (file: FileManagerInterface) => boolean | null = null;
     private _type: filterType | null = null;
 
-    constructor(name: string, _data: RegExp | ((...args) => boolean), _regCheck = 'name') {
+    constructor(name: string, _data: RegExp | ((file: FileManagerInterface) => boolean), _regCheck: fileRegExpType = 'name') {
         this._name = name;
         if (_data instanceof RegExp) {
             this._type = filterType.regex;
@@ -36,65 +38,39 @@ export class FileFilter {
         throw new Error('FilterData is not defined.');
     }
 
-    public validate(_file: FileManagerInterface): boolean {
+    public validate(file: FileManagerInterface): boolean {
         let _valid = false;
-        switch (this._type) {
-            case filterType.regex:
-                {
-                    switch (this._regCheck) {
-                        case 'name':
-                            {
-                                if (_file.object.name.match(<RegExp>this._regex)) {
-                                    _valid = true;
-                                }
-                            }
-                            break;
+        if (this._type === filterType.regex) {
+            return this._regexpCheck(file);
+        } else if (this._type === filterType.callback) {
+            _valid = (<(file: FileManagerInterface) => boolean>this._callback)(file);
+        } else {
+            throw new Error('Filter type is not defined.');
+        }
+        return _valid;
+    }
 
-                        case 'type':
-                            {
-                                if (_file.object.type.match(<RegExp>this._regex)) {
-                                    _valid = true;
-                                }
-                            }
-                            break;
-
-                        case 'size':
-                            {
-                                if ((<string>(<any>_file.object.size)).match(<RegExp>this._regex)) {
-                                    _valid = true;
-                                }
-                            }
-                            break;
-
-                        case 'date':
-                            {
-                                // Format for validation is `2017-01-01 10:10:10`
-                                // tslint:disable-next-line:max-line-length
-                                const _checkDate: string | null = new DatePipe('en-US').transform(
-                                    _file.object.lastModifiedDate,
-                                    'yyyy-MM-dd hh:mm:ss'
-                                );
-                                if (_checkDate && _checkDate.match(<RegExp>this._regex)) {
-                                    _valid = true;
-                                }
-                            }
-                            break;
-
-                        default: {
-                            throw new Error('RegExp can only check on `name | type | size | date`.');
-                        }
-                    }
-                }
+    private _regexpCheck(file: FileManagerInterface): boolean {
+        let _valid = false;
+        switch (this._regCheck) {
+            case 'name':
+                _valid = file.object.name.match(<RegExp>this._regex) != null;
                 break;
 
-            case filterType.callback:
-                {
-                    _valid = (<(...args) => boolean>this._callback)(_file);
+            case 'type':
+                _valid = file.object.type.match(<RegExp>this._regex) != null;
+                break;
+
+            case 'date':
+                // Format for validation is `2017-01-01 10:10:10`
+                const _checkDate: string | null = new DatePipe('en-US').transform(file.object.lastModifiedDate, 'yyyy-MM-dd hh:mm:ss');
+                if (_checkDate && _checkDate.match(<RegExp>this._regex)) {
+                    _valid = true;
                 }
                 break;
 
             default: {
-                throw new Error('Filter type is not defined.');
+                throw new Error('RegExp can only check on `name | type | date`.');
             }
         }
         return _valid;
