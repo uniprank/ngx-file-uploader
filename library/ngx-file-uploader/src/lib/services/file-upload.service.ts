@@ -1,12 +1,12 @@
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Transfer, HookTypeEnum, UploaderHook, FileManager, ProtocolXHR, FileUploader } from '../classes';
-import { TransferOptionsInterface } from '../interfaces';
+import { HookTypeEnum, UploaderHook, ProtocolXHR, FileUploader } from '../classes';
+import { TransferOptionsInterface, TransferInterface, FileManagerInterface } from '../interfaces';
 import { AngularFileUploadProtocol } from './angular-file-upload.protocol';
 
 interface UploadServiceInterface {
-    uploader: Transfer;
+    uploader: TransferInterface<FileManagerInterface>;
 }
 
 export const FILE_UPLOADER_CONFIG = new InjectionToken<TransferOptionsInterface>(null);
@@ -22,7 +22,7 @@ export class FileUploadService {
         }
     }
 
-    public registerUploadService(uploaderKey: string, uploader: Transfer): void {
+    public registerUploadService(uploaderKey: string, uploader: TransferInterface<FileManagerInterface>): void {
         if (this._uploadServices[uploaderKey] != null) {
             throw new Error(`Upload service with the key [${uploaderKey}] exists.`);
         }
@@ -54,22 +54,24 @@ export class FileUploadService {
         this._uploadServices[uploaderKey].uploader.init();
     }
 
-    public getUploader(uploaderKey: string): Transfer {
+    public getUploader(uploaderKey: string): TransferInterface<FileManagerInterface> {
         this._checkUploader(uploaderKey);
 
         return this._uploadServices[uploaderKey].uploader;
     }
 
-    public addFile(uploaderKey: string, file: FileManager): void {
+    public addFile(uploaderKey: string, file: FileManagerInterface): void {
         this._checkUploader(uploaderKey);
 
-        this._uploadServices[uploaderKey].uploader.addFile(file);
+        file.bindUploader(this._uploadServices[uploaderKey].uploader);
     }
 
-    public addFiles(uploaderKey: string, files: FileManager[]): void {
+    public addFiles(uploaderKey: string, files: FileManagerInterface[]): void {
         this._checkUploader(uploaderKey);
 
-        this._uploadServices[uploaderKey].uploader.addFilesToQueue(files);
+        for (const _file of files) {
+            _file.bindUploader(this._uploadServices[uploaderKey].uploader);
+        }
     }
 
     public startAll(uploaderKey: string): void {
@@ -78,8 +80,12 @@ export class FileUploadService {
         this._uploadServices[uploaderKey].uploader.upload();
     }
 
-    public startFile(uploaderKey: string, file: FileManager): void {
+    public startFile(uploaderKey: string, file: FileManagerInterface): void {
         this._checkUploader(uploaderKey);
+
+        if (file.getUploader() == null) {
+            file.bindUploader(this._uploadServices[uploaderKey].uploader);
+        }
 
         this._uploadServices[uploaderKey].uploader.uploadFile(file);
     }
@@ -90,7 +96,7 @@ export class FileUploadService {
         this._uploadServices[uploaderKey].uploader.cancel();
     }
 
-    public cancelFile(uploaderKey: string, file: FileManager): void {
+    public cancelFile(uploaderKey: string, file: FileManagerInterface): void {
         this._checkUploader(uploaderKey);
 
         this._uploadServices[uploaderKey].uploader.cancelUploadFile(file);

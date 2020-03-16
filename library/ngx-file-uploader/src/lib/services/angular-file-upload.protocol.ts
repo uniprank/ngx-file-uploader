@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType, HttpRequest } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
 import { map, catchError, takeUntil } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ export class AngularFileUploadProtocol extends Protocol {
      *
      * @memberOf ProtocolXHR
      */
-    public run<T>(_file: FileManagerInterface): void {
+    public async run<T>(_file: FileManagerInterface): Promise<void> {
         let sendable: any;
         const uploader: TransferInterface<FileManagerInterface> = _file.getUploader();
 
@@ -27,7 +27,7 @@ export class AngularFileUploadProtocol extends Protocol {
         const _method = Utils.extendValue(uploader.options.method, _file.options.method);
         const _url = Utils.extendValue(uploader.options.url, _file.options.url);
         const _alias = Utils.extendValue(uploader.options.alias, _file.options.alias);
-        const _headers = Utils.extendValue(uploader.options.headers, _file.options.headers);
+        const _headers = Utils.extendValue(uploader.options.headers, _file.options.headers, { 'Content-Type': 'multipart/form-data' });
 
         const time: number = new Date().getTime();
 
@@ -56,40 +56,21 @@ export class AngularFileUploadProtocol extends Protocol {
             throw new TypeError('We need the file size.');
         }
 
-        let _post;
+        const _req = new HttpRequest(_method, _url, sendable, {
+            headers: _headers,
+            reportProgress: true,
+            withCredentials: _withCredentials
+        });
 
-        switch (_method) {
-            case 'POST':
-                _post = this._httpClient.post<T>(_url, sendable, {
-                    headers: _headers,
-                    reportProgress: true,
-                    observe: 'events',
-                    withCredentials: _withCredentials
-                });
-                this.handleMethode<T>(_file, _post, time);
-                break;
-            case 'PUT':
-                _post = this._httpClient.put(_url, sendable, {
-                    headers: _headers,
-                    reportProgress: true,
-                    observe: 'events',
-                    withCredentials: _withCredentials
-                });
-                this.handleMethode<any>(_file, _post, time);
-                break;
-            case 'PATCH':
-                _post = this._httpClient.patch<T>(_url, sendable, {
-                    headers: _headers,
-                    reportProgress: true,
-                    observe: 'events',
-                    withCredentials: _withCredentials
-                });
-                this.handleMethode<T>(_file, _post, time);
-                break;
-        }
+        const _post = this._httpClient.request<T>(_req);
+        await this.handleMethode<T>(_file, _post, time);
     }
 
-    public handleMethode<T>(_file: FileManagerInterface, requestHandle: Observable<HttpEvent<T>>, time: number): void {
+    public async handleMethode<T>(
+        _file: FileManagerInterface,
+        requestHandle: Observable<HttpEvent<T>>,
+        time: number
+    ): Promise<HttpEvent<T>> {
         let _load = 0;
         let _speed = 0;
         let _speedToText: string | null = null;
@@ -97,50 +78,54 @@ export class AngularFileUploadProtocol extends Protocol {
 
         let _headers, _response, _status, _request;
 
-        requestHandle.pipe(
-            takeUntil(this.ngUnsubscribe),
-            map((event) => {
-                switch (event.type) {
-                    case HttpEventType.UploadProgress:
-                        const _time = new Date().getTime() - time;
-                        _load = event.loaded - _load;
-                        _speed = (_load / _time) * 1000;
-                        _speed = parseInt(<any>_speed, 10);
-                        _speedToText = _$filesize.transform(_speed);
-                        const _obj = {
-                            total: event.total,
-                            loaded: event.loaded,
-                            percent: Math.round((event.loaded / event.total) * 100),
-                            speed: _speed,
-                            speedToText: _speedToText
-                        };
-                        _request = this.isConnected(_file);
-                        if (!!_request) {
-                            this.progress.emit({ _file: _file, _data: _obj });
-                        }
-                        break;
+        return requestHandle
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                map((event) => {
+                    switch (event.type) {
+                        case HttpEventType.UploadProgress:
+                            const _time = new Date().getTime() - time;
+                            _load = event.loaded - _load;
+                            _speed = (_load / _time) * 1000;
+                            _speed = parseInt(<any>_speed, 10);
+                            _speedToText = _$filesize.transform(_speed);
+                            const _obj = {
+                                total: event.total,
+                                loaded: event.loaded,
+                                percent: Math.round((event.loaded / event.total) * 100),
+                                speed: _speed,
+                                speedToText: _speedToText
+                            };
+                            _request = this.isConnected(_file);
+                            if (!!_request) {
+                                this.progress.emit({ _file: _file, _data: _obj });
+                            }
+                            return event;
 
-                    case HttpEventType.Response:
-                        _headers = event.headers;
-                        _response = event.body;
-                        _status = event.status;
-                        _request = this.isConnected(_file);
-                        if (!!_request) {
-                            this.load.emit({ _file: _file, response: _response, status: _status, headers: _headers });
-                        }
-                        break;
-                }
-            }),
-            catchError((operation = 'operation', result?: any) => {
-                return (error: any): Observable<any> => {
-                    console.log(`${operation} failed: ${error.message}`);
-                    console.error(error);
-                    this.error.emit({ _file: _file, response: result, status: error.status, headers: {} });
+                        case HttpEventType.Response:
+                            _headers = event.headers;
+                            _response = event.body;
+                            _status = event.status;
+                            _request = this.isConnected(_file);
+                            if (!!_request) {
+                                this.load.emit({ _file: _file, response: _response, status: _status, headers: _headers });
+                            }
+                            return event;
+                        default:
+                            return event;
+                    }
+                }),
+                catchError((operation = 'operation', result?: any) => {
+                    return (error: any): Observable<any> => {
+                        console.log(`${operation} failed: ${error.message}`);
+                        console.error(error);
+                        this.error.emit({ _file: _file, response: result, status: error.status, headers: {} });
 
-                    return of(result);
-                };
-            })
-        );
+                        return of(result);
+                    };
+                })
+            )
+            .toPromise();
     }
 
     public cancel(_file: FileManagerInterface) {

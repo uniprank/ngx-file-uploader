@@ -6,29 +6,24 @@ export class FileObject {
     type: string;
     name: string;
 
-    constructor(fileOrInput: any) {
+    constructor(fileOrInput: HTMLInputElement | File) {
         const isInput = Utils.isElement(fileOrInput);
-        const fakePathOrObject = isInput ? fileOrInput.value : fileOrInput;
-        const isFakePath = Utils.isString(fakePathOrObject) ? true : false;
-        const method = (v: boolean, x: any) => {
-            if (v) {
-                this._createFromFakePath(x);
-            } else {
-                this._createFromObject(x);
-            }
-        };
-        method(isFakePath, fakePathOrObject);
+        if (isInput) {
+            this._createFromFakePath((fileOrInput as HTMLInputElement).value);
+        } else {
+            this._createFromObject(fileOrInput as File);
+        }
     }
 
     private _createFromFakePath(path: string) {
         this.lastModifiedDate = null;
         this.size = null;
         this.type = 'like/' + path.slice(path.lastIndexOf('.') + 1).toLowerCase();
-        this.name = path.slice(path.lastIndexOf('/') + path.lastIndexOf('\\') + 2);
+        this.name = path.split(/(\\|\/)/g).pop();
     }
 
-    private _createFromObject(object: any) {
-        this.lastModifiedDate = new Date(object.lastModifiedDate.getTime());
+    private _createFromObject(object: File) {
+        this.lastModifiedDate = new Date(object.lastModified || (object as any).lastModifiedDate.getTime());
         this.size = object.size;
         this.type = object.type;
         this.name = object.name;
