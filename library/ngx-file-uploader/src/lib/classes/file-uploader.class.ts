@@ -78,7 +78,7 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
                 const { _file, response, status, headers } = obj;
                 if (instanceOfFileManagerInterface(_file)) {
                     const uploader: TransferInterface<FileManagerInterface> = _file.getUploader();
-                    uploader._onErrorFile(_file, response, status, headers);
+                    uploader._onCancelFile(_file, response, status, headers);
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
             },

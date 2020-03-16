@@ -61,110 +61,194 @@ describe('FileUploadService', () => {
         ).not.toThrowError();
     });
 
-    it(`should add a new file`, () => {
-        const _time = new Date();
-        const _file = ({
-            lastModified: _time,
-            size: 256,
-            type: 'image/png',
-            name: 'Test_Dummy-Image.png'
-        } as unknown) as File;
-        const _fileManager = new FileManager(_file);
-        const _uploader = _service.getUploader('default');
-
-        _service.addFile('default', _fileManager);
-
-        expect(_uploader.queueObs[0]).toEqual(_fileManager);
+    it(`should not set the same hook twice to 'default'`, () => {
+        expect(() => {
+            _service.setHook('default', HookTypeEnum.prepareUploadFile, (...args) => {
+                console.log('Works');
+            });
+            _service.setHook('default', HookTypeEnum.prepareUploadFile, (...args) => {
+                console.log('Works');
+            });
+        }).toThrowError();
     });
 
-    it(`should add a new files`, () => {
-        const _time = new Date();
-
-        const _fileA = ({
-            lastModified: _time,
-            size: 256,
-            type: 'image/png',
-            name: 'Test_Dummy-Image.png'
-        } as unknown) as File;
-
-        const _fileB = ({
-            lastModified: _time,
-            size: 512,
-            type: 'image/jpg',
-            name: 'Test_Dummy-Image.jpg'
-        } as unknown) as File;
-
-        const _fileManagerArray: FileManager[] = [];
-
-        _fileManagerArray.push(new FileManager(_fileA));
-        _fileManagerArray.push(new FileManager(_fileB));
-
-        const _uploader = _service.getUploader('default');
-
-        _service.addFiles('default', _fileManagerArray);
-
-        expect(_uploader.queueObs[0]).toEqual(_fileManagerArray[0]);
-        expect(_uploader.queueObs[1]).toEqual(_fileManagerArray[1]);
+    it(`should set 2 hooks with different priority to 'default'`, () => {
+        expect(() => {
+            _service.setHook(
+                'default',
+                HookTypeEnum.prepareUploadFile,
+                (...args) => {
+                    console.log('Works');
+                },
+                3
+            );
+            _service.setHook(
+                'default',
+                HookTypeEnum.prepareUploadFile,
+                (...args) => {
+                    console.log('Works2');
+                },
+                1
+            );
+        }).not.toThrowError();
     });
 
-    it(`should start all file upload`, (done: DoneFn) => {
-        const _file = new File(['sample'], 'sample.txt', { type: 'text/plain' });
-        const _fileManager = new FileManager(_file);
+    describe(`with one file`, () => {
+        let _file, _fileManager;
 
-        _service.addFile('default', _fileManager);
-        _service.startAll('default');
-
-        const _req = _httpMock.expectOne(`https://test.test.de/api`);
-
-        expect(_req.request.method).toBe('POST');
-
-        _service.setHook('default', HookTypeEnum.successUploadFile, (...args) => {
-            expect(args[0]).toEqual(_fileManager);
-            done();
+        beforeEach(() => {
+            _file = new File(['sample'], 'sample.txt', { type: 'text/plain' });
+            _fileManager = new FileManager(_file);
         });
 
-        // Respond with a mocked UploadProgress HttpEvent
-        _req.event({ type: HttpEventType.UploadProgress, loaded: 7, total: 10 });
-        _req.event({ type: HttpEventType.UploadProgress, loaded: 10, total: 10 });
-        _req.event({
-            type: HttpEventType.Response,
-            clone: null,
-            headers: null,
-            body: '',
-            status: 200,
-            statusText: '',
-            url: `https://test.test.de/api`,
-            ok: true
+        it(`should add a new file`, () => {
+            const _uploader = _service.getUploader('default');
+
+            _service.addFile('default', _fileManager);
+
+            expect(_uploader.queueObs[0]).toEqual(_fileManager);
+        });
+
+        it(`should start a file upload`, (done: DoneFn) => {
+            _service.startFile('default', _fileManager);
+
+            const _req = _httpMock.expectOne(`https://test.test.de/api`);
+
+            expect(_req.request.method).toBe('POST');
+
+            _service.setHook('default', HookTypeEnum.successUploadFile, (...args) => {
+                expect(args[0]).toEqual(_fileManager);
+                done();
+            });
+
+            // Respond with a mocked UploadProgress HttpEvent
+            _req.event({ type: HttpEventType.UploadProgress, loaded: 7, total: 10 });
+            _req.event({ type: HttpEventType.UploadProgress, loaded: 10, total: 10 });
+            _req.event({
+                type: HttpEventType.Response,
+                clone: null,
+                headers: null,
+                body: '',
+                status: 200,
+                statusText: '',
+                url: `https://test.test.de/api`,
+                ok: true
+            });
+        });
+
+        it(`should cancel a file upload`, (done: DoneFn) => {
+            _service.startFile('default', _fileManager);
+
+            const _req = _httpMock.expectOne(`https://test.test.de/api`);
+
+            expect(_req.request.method).toBe('POST');
+
+            _service.setHook('default', HookTypeEnum.cancelUploadFile, (...args) => {
+                expect(args[0]).toEqual(_fileManager);
+                done();
+            });
+
+            // Respond with a mocked UploadProgress HttpEvent
+            _req.event({ type: HttpEventType.UploadProgress, loaded: 3, total: 10 });
+            _req.event({ type: HttpEventType.UploadProgress, loaded: 8, total: 10 });
+            _service.cancelFile('default', _fileManager);
         });
     });
 
-    it(`should start a file upload`, (done: DoneFn) => {
-        const _file = new File(['sample'], 'sample.txt', { type: 'text/plain' });
-        const _fileManager = new FileManager(_file);
+    describe(`with muliple files`, () => {
+        let _fileA, _fileB, _fileManagerArray: FileManager[];
 
-        _service.startFile('default', _fileManager);
+        beforeEach(() => {
+            _fileA = new File(['sample'], 'fileA.png', { type: 'image/png' });
+            _fileB = new File(['sample'], 'fileB.jpg', { type: 'image/jpg' });
 
-        const _req = _httpMock.expectOne(`https://test.test.de/api`);
+            _fileManagerArray = [];
 
-        expect(_req.request.method).toBe('POST');
-
-        _service.setHook('default', HookTypeEnum.successUploadFile, (...args) => {
-            expect(args[0]).toEqual(_fileManager);
-            done();
+            _fileManagerArray.push(new FileManager(_fileA));
+            _fileManagerArray.push(new FileManager(_fileB));
         });
 
-        // Respond with a mocked UploadProgress HttpEvent
-        _req.event({ type: HttpEventType.UploadProgress, loaded: 7, total: 10 });
-        _req.event({ type: HttpEventType.UploadProgress, loaded: 10, total: 10 });
-        _req.event({
-            type: HttpEventType.Response,
-            clone: null,
-            headers: null,
-            body: '',
-            status: 200,
-            statusText: '',
-            url: `https://test.test.de/api`,
-            ok: true
+        it(`should add a new files`, () => {
+            const _uploader = _service.getUploader('default');
+
+            _service.addFiles('default', _fileManagerArray);
+
+            expect(_uploader.queueObs[0]).toEqual(_fileManagerArray[0]);
+            expect(_uploader.queueObs[1]).toEqual(_fileManagerArray[1]);
+        });
+
+        it(`should start uploading all files`, (done: DoneFn) => {
+            _service.addFiles('default', _fileManagerArray);
+            _service.startAll('default');
+
+            const _req = _httpMock.match(`https://test.test.de/api`);
+
+            expect(_req[0].request.method).toBe('POST');
+            expect(_req[1].request.method).toBe('POST');
+
+            let _cnt = 0;
+            _service.setHook('default', HookTypeEnum.successUploadFile, (...args) => {
+                expect(args[0]).toEqual(_fileManagerArray[_cnt++]);
+                if (_cnt === 2) {
+                    done();
+                }
+            });
+
+            // Respond with a mocked UploadProgress HttpEvent
+            _req[0].event({ type: HttpEventType.UploadProgress, loaded: 7, total: 10 });
+            _req[0].event({ type: HttpEventType.UploadProgress, loaded: 10, total: 10 });
+            _req[0].event({
+                type: HttpEventType.Response,
+                clone: null,
+                headers: null,
+                body: '',
+                status: 200,
+                statusText: '',
+                url: `https://test.test.de/api`,
+                ok: true
+            });
+
+            // Respond with a mocked UploadProgress HttpEvent
+            _req[1].event({ type: HttpEventType.UploadProgress, loaded: 7, total: 10 });
+            _req[1].event({ type: HttpEventType.UploadProgress, loaded: 10, total: 10 });
+            _req[1].event({
+                type: HttpEventType.Response,
+                clone: null,
+                headers: null,
+                body: '',
+                status: 200,
+                statusText: '',
+                url: `https://test.test.de/api`,
+                ok: true
+            });
+        });
+
+        it(`should cancel all file uploads`, (done: DoneFn) => {
+            _service.addFiles('default', _fileManagerArray);
+            _service.startAll('default');
+
+            const _req = _httpMock.match(`https://test.test.de/api`);
+
+            expect(_req[0].request.method).toBe('POST');
+            expect(_req[1].request.method).toBe('POST');
+
+            let _cnt = 0;
+            _service.setHook('default', HookTypeEnum.cancelUploadFile, (...args) => {
+                expect(args[0]).toEqual(_fileManagerArray[_cnt++]);
+                if (_cnt === 2) {
+                    done();
+                }
+            });
+
+            // Respond with a mocked UploadProgress HttpEvent
+            _req[0].event({ type: HttpEventType.UploadProgress, loaded: 2, total: 10 });
+            _req[0].event({ type: HttpEventType.UploadProgress, loaded: 5, total: 10 });
+
+            // Respond with a mocked UploadProgress HttpEvent
+            _req[1].event({ type: HttpEventType.UploadProgress, loaded: 1, total: 10 });
+            _req[1].event({ type: HttpEventType.UploadProgress, loaded: 6, total: 10 });
+
+            _service.cancelAll('default');
         });
     });
 });

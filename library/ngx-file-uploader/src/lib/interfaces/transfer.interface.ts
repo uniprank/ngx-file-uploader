@@ -24,7 +24,6 @@ export interface TransferInterface<T> {
     removeHook(hook: UploaderHook): boolean;
     activeHooks(): string[];
 
-    addFilesToQueue(files: any, options?: FileManagerOptionsInterface): T[];
     addFilter(filter: FileFilter): void;
 
     addFile(file: T): boolean;
@@ -57,6 +56,7 @@ export interface TransferInterface<T> {
     onProgressFileSpeed(file: T, progress: any): void;
     onSuccess(file: T, response: any, status: number, headers: any): void;
     onError(file: T, response: any, status: number, headers: any): void;
+    onCancel(file: T, response: any, status: number, headers: any): void;
     onComplete(file: T, response: any, status: number, headers: any): void;
     onCompleteAll(uploader: TransferInterface<T>): void;
 
@@ -74,6 +74,7 @@ export interface TransferInterface<T> {
     _onProgress(): void;
     _onSuccessFile(file: T, response: any, status: number, headers: any): void;
     _onErrorFile(file: T, response: any, status: number, headers: any): void;
+    _onCancelFile(file: T, response: any, status: number, headers: any): void;
     _onCompleteFile(file: T, response: any, status: number, headers: any): void;
     _onCompleteAll(): void;
 

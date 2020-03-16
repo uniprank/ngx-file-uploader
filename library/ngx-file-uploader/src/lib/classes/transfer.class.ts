@@ -109,9 +109,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         if (this._hookExists(hook) === -1) {
             this._hooks.push(hook);
             this._hooks.sort((a, b) => {
-                if (!a.type || !b.type) {
-                    return 0;
-                }
                 if (a.type !== b.type) {
                     if (a.type < b.type) {
                         return -1;
@@ -121,9 +118,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
                     }
                     return 0;
                 } else {
-                    if (!a.priority || !b.priority) {
-                        return 0;
-                    }
                     if (a.priority > b.priority) {
                         return -1;
                     }
@@ -133,6 +127,8 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
                     return 0;
                 }
             });
+        } else {
+            throw new Error(`Hook with the Type [${hook.type}] and the same callback still exists.`);
         }
     }
 
@@ -152,49 +148,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
 
     public activeHooks(): string[] {
         return this._hooks.map((_hook) => `${HookTypeEnum[_hook.type]}->prio:${_hook.priority}`);
-    }
-
-    /**
-     *  Add files to queue
-     *
-     * @memberOf Transfer
-     */
-    public addFilesToQueue(files: any, options?: FileManagerOptionsInterface): FileManagerInterface[] {
-        const _retFiles: FileManagerInterface[] = [];
-        let _dummyFile: FileManagerInterface;
-        let _check = false;
-
-        if (Utils.isElement(files)) {
-            // If _files was not converted
-            for (const _fileElement of files.files) {
-                try {
-                    _dummyFile = this.createDummy(_fileElement, options);
-                } catch (e) {
-                    throw Error(`Couldn't create a new FileManagerInterface object.`);
-                }
-                _check = this.addFile(_dummyFile);
-                _check && _retFiles.push(_dummyFile);
-            }
-        } else if (files instanceof Object) {
-            // If _files is an array of FileManger
-            if (typeof files[0] !== 'undefined' && instanceOfFileManagerInterface(files[0])) {
-                for (const _file of files) {
-                    _check = this.addFile(_file);
-                    _check && _retFiles.push(_file);
-                }
-                // If _files is only a FileManger
-            } else if (instanceOfFileManagerInterface(files)) {
-                _check = this.addFile(files);
-                _check && _retFiles.push(files);
-            } else {
-                throw new Error(`Couldn'FileManagerInterface put file/files to the queue. [${files}]`);
-            }
-        } else {
-            throw new Error(`Couldn'FileManagerInterface initialise FileUploader file/files are not defined. [${files}]`);
-        }
-        this._onAddFileAll();
-
-        return _retFiles;
     }
 
     public addFile(file: FileManagerInterface): boolean {
@@ -301,11 +254,10 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         this.getProtocol().run(item);
     }
     public cancelUploadFile(item: FileManagerInterface) {
-        if (this.inQueue(item) === -1) {
-            return;
+        if (this.inQueue(item) !== -1) {
+            item.isUploading && this.getProtocol().cancel(item);
+            item.isUploading && item._cancel();
         }
-        item.isUploading && this.getProtocol().cancel(item);
-        item.isUploading && item._cancel();
     }
 
     /**
@@ -345,6 +297,9 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
     public onError(_file: FileManagerInterface, _response: any, _status: number, _headers: any): void {
         return;
     }
+    public onCancel(_file: FileManagerInterface, _response: any, _status: number, _headers: any): void {
+        return;
+    }
     public onComplete(_file: FileManagerInterface, _response: any, _status: number, _headers: any): void {
         return;
     }
@@ -356,10 +311,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
      * Internal functions
      */
 
-    /**
-     *
-     * @memberOf FileManagerInterface
-     */
     public _onAddFileAll(): void {
         this.onAddFileAll(this as any);
     }
@@ -409,10 +360,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
             this._runHook(HookTypeEnum.progressUploadAll, percent);
             this.onProgress(this as any, percent);
             percent >= 100 && this._onCompleteAll();
-            return;
         }
-        this.onProgress(this as any, 100);
-        this._onCompleteAll();
     }
     public _onSuccessFile(_file: FileManagerInterface, response: any, status: number, headers: any): void {
         this._runHook(HookTypeEnum.successUploadFile, _file, response, status, headers);
@@ -423,6 +371,11 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         this._runHook(HookTypeEnum.failedUploadFile, _file, response, status, headers);
         _file._onError(response, status, headers);
         this.onError(_file, response, status, headers);
+    }
+    public _onCancelFile(_file: FileManagerInterface, response: any, status: number, headers: any): void {
+        this._runHook(HookTypeEnum.cancelUploadFile, _file, response, status, headers);
+        _file._onError(response, status, headers);
+        this.onCancel(_file, response, status, headers);
     }
     public _onCompleteFile(_file: FileManagerInterface, response: any, status: number, headers: any): void {
         this._runHook(HookTypeEnum.completeUploadFile, _file, response, status, headers);
