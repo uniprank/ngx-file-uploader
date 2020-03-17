@@ -118,8 +118,8 @@ export class AngularFileUploadProtocol extends Protocol {
                 catchError((operation = 'operation', result?: any) => {
                     return (error: any): Observable<any> => {
                         console.log(`${operation} failed: ${error.message}`);
-                        console.error(error);
                         this.error.emit({ _file: _file, response: result, status: error.status, headers: {} });
+                        console.error(error);
 
                         return of(result);
                     };

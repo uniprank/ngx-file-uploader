@@ -18,8 +18,6 @@ export interface TransferInterface<T> {
     isHTML5(): boolean;
     isDragAndDrop(): boolean;
 
-    createDummy(fileElement: any, options: FileManagerOptionsInterface): T;
-
     hook(hook: UploaderHook);
     removeHook(hook: UploaderHook): boolean;
     activeHooks(): string[];
@@ -45,7 +43,6 @@ export interface TransferInterface<T> {
     /**
      * Overwrite functions
      */
-    onAddFileAll(uploader: TransferInterface<T>): void;
     onAddFile(file: T): void;
     onAddFileError(file: T): void;
     onRemoveFile(file: T): void;
@@ -63,7 +60,6 @@ export interface TransferInterface<T> {
     /**
      * Internal functions
      */
-    _onAddFileAll(): void;
     _onAddFile(file: T): void;
     _onAddFileError(file: T): void;
     _onRemoveFile(file: T): void;
@@ -78,7 +74,6 @@ export interface TransferInterface<T> {
     _onCompleteFile(file: T, response: any, status: number, headers: any): void;
     _onCompleteAll(): void;
 
-    _headersGetter(parsedHeaders: any): (name: string) => any;
     _parseHeaders(headers: string): object;
     _transformResponse(response: any, headers: any): any;
 

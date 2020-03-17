@@ -14,6 +14,8 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
 
         if (typeof _protocol === 'undefined') {
             this.setProtocol(new ProtocolXHR());
+        } else {
+            this.setProtocol(_protocol);
         }
         this.init();
     }
@@ -87,10 +89,6 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
             }
         );
         this._subs.push(sub4);
-    }
-
-    public createDummy(fileElement: any, options: FileManagerOptionsInterface): FileManager {
-        return new FileManager(fileElement, options, this);
     }
 
     public destroy() {

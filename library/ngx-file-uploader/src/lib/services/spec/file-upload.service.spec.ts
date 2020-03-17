@@ -1,5 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { FileUploadService, FILE_UPLOADER_CONFIG } from '../file-upload.service';
 import { FileUploader } from '../../classes/file-uploader.class';

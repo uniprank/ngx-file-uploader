@@ -3,26 +3,11 @@ import { Utils } from './utils.class';
 import { Protocol } from './protocol.class';
 import { HookTypeEnum, UploaderHook } from './uploader-hook.class';
 import { FileFilter } from './file-filter.class';
-import { FileManagerOptionsInterface, TransferOptionsInterface } from '../interfaces';
+import { TransferOptionsInterface } from '../interfaces';
 import { TransferInterface } from '../interfaces/transfer.interface';
-import { FileManagerInterface, instanceOfFileManagerInterface } from '../interfaces/file-manager.interface';
-import { take, map } from 'rxjs/operators';
+import { FileManagerInterface } from '../interfaces/file-manager.interface';
 
-// tslint:disable:no-unused-expression
-
-const TransferOptionsDefault: TransferOptionsInterface = {
-    url: '',
-    alias: 'file',
-    headers: {},
-    filters: [],
-    formData: [],
-    autoUpload: false,
-    method: 'POST',
-    removeBySuccess: false,
-    enableCors: false,
-    withCredentials: false,
-    uniqueFiles: false
-};
+// tslint:disable: no-unused-expression
 
 /**
  * An abstract class for the transport functionality
@@ -30,6 +15,20 @@ const TransferOptionsDefault: TransferOptionsInterface = {
  * @export
  */
 export abstract class Transfer implements TransferInterface<FileManagerInterface> {
+    private transferOptionsDefault: TransferOptionsInterface = {
+        url: '',
+        alias: 'file',
+        headers: {},
+        filters: [],
+        formData: [],
+        autoUpload: false,
+        method: 'POST',
+        removeBySuccess: false,
+        enableCors: false,
+        withCredentials: false,
+        uniqueFiles: false
+    };
+
     public options: TransferOptionsInterface;
 
     public get id(): any {
@@ -70,7 +69,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
             throw new Error(`Your browser doesn't support HTML5. Our NgxFileUploader can't work here.`);
         }
 
-        this.options = Object.assign({}, TransferOptionsDefault, options);
+        this.options = Object.assign({}, this.transferOptionsDefault, options);
     }
 
     /**
@@ -116,7 +115,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
                     if (a.type > b.type) {
                         return 1;
                     }
-                    return 0;
                 } else {
                     if (a.priority > b.priority) {
                         return -1;
@@ -151,9 +149,13 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
     }
 
     public addFile(file: FileManagerInterface): boolean {
+        let _valid = false;
         try {
-            this.validate(file);
+            _valid = this.validate(file);
         } catch (e) {
+            _valid = false;
+        }
+        if (!_valid) {
             this._onAddFileError(file);
             return false;
         }
@@ -200,13 +202,16 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
     }
 
     public addFilter(_filter: FileFilter): void {
-        if (this._filterExists(_filter) !== -1) {
-            (<FileFilter[]>this.options.filters).push(_filter);
+        if (!this._filterExists(_filter)) {
+            this.options.filters.push(_filter);
         }
     }
 
     public validate(_file: FileManagerInterface): boolean {
-        return (<FileFilter[]>this.options.filters).some((_filter) => _filter.validate(_file));
+        if (this.options.filters.length > 0) {
+            return this.options.filters.some((_filter) => _filter.validate(_file));
+        }
+        return true;
     }
 
     public setProtocol(_protocol: Protocol) {
@@ -264,9 +269,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
      * Overwrite functions
      */
 
-    public onAddFileAll(_uploader: TransferInterface<FileManagerInterface>): void {
-        return;
-    }
     public onAddFile(_file: FileManagerInterface): void {
         return;
     }
@@ -311,9 +313,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
      * Internal functions
      */
 
-    public _onAddFileAll(): void {
-        this.onAddFileAll(this as any);
-    }
     public _onAddFile(_file: FileManagerInterface): void {
         this.onAddFile(_file);
     }
@@ -387,14 +386,6 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         this.onCompleteAll(this as any);
     }
 
-    public _headersGetter(parsedHeaders: any) {
-        return (name: any) => {
-            if (name) {
-                return parsedHeaders[name.toLowerCase()] || null;
-            }
-            return parsedHeaders;
-        };
-    }
     public _parseHeaders(headers: any): any {
         const parsed: any = {};
         let key: any, val: any, i: any;
@@ -480,20 +471,16 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         return -1;
     }
 
-    private _filterExists(_filter: FileFilter): number {
-        const filters = <FileFilter[]>this.options.filters;
-        for (const key in filters) {
-            if (filters.hasOwnProperty(key)) {
-                const obj = filters[key];
-                if (obj.name === _filter.name) {
-                    return +key;
-                }
+    private _filterExists(filter: FileFilter): boolean {
+        const _filters = this.options.filters;
+        for (const _filter of _filters) {
+            if (_filter.name === filter.name) {
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
     public abstract init(): void;
     public abstract destroy(): void;
-    public abstract createDummy(fileElement: any, options: FileManagerOptionsInterface): FileManagerInterface;
 }
