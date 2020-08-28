@@ -17,9 +17,11 @@
     "homepage": "https://github.com/uniprank/ngx-file-uploader#readme",
     "description": "This is a library allows you to upload files via angular with some more flexibility",
     "private": false,
+    "dependencies": {
+        "tslib": "^2.0.0"
+    },
     "peerDependencies": {
         "@angular/common": ">=9.0.3",
-        "@angular/core": ">=9.0.3",
-        "tslib": "^2.0.0"
+        "@angular/core": ">=9.0.3"
     }
 }
