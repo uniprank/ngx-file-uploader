@@ -18,10 +18,10 @@ const pipes = [FileSizePipe];
     imports: [],
     exports: [...directives, ...pipes]
 })
-export class NgxFileUploaderModule {
-    public static forRoot(parameters: TransferOptionsInterface = {}): ModuleWithProviders {
+export class InwFileUploaderModule {
+    public static forRoot(parameters?: TransferOptionsInterface): ModuleWithProviders<InwFileUploaderModule> {
         return {
-            ngModule: NgxFileUploaderModule,
+            ngModule: InwFileUploaderModule,
             providers: [...providers, { provide: FILE_UPLOADER_CONFIG, useValue: parameters }]
         };
     }

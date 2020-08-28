@@ -6,4 +6,4 @@ export * from './lib/interfaces';
 export * from './lib/pipes';
 export * from './lib/services';
 export * from './lib/classes';
-export * from './lib/ngx-file-uploader.module';
+export * from './lib/inw-file-uploader.module';
