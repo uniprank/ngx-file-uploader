@@ -79,8 +79,7 @@
                             "node_modules/prismjs/components/prism-typescript.min.js",
                             "node_modules/prismjs/components/prism-css.min.js",
                             "node_modules/prismjs/components/prism-shell-session.min.js"
-                        ],
-                        "es5BrowserSupport": true
+                        ]
                     },
                     "configurations": {
                         "production": {

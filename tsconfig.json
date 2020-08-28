@@ -1,42 +1,23 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+
+  To learn more about this file see: https://angular.io/config/solution-tsconfig.
+*/
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "baseUrl": "./",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "target": "es2015",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-        "lib": [
-            "es2018",
-            "dom"
-        ],
-        "paths": {
-            "ngx-file-uploader": [
-                "dist/ngx-file-uploader/ngx-file-uploader",
-                "dist/ngx-file-uploader"
-            ],
-            "@uniprank/ngx-file-uploader": [
-                "dist/ngx-file-uploader/ngx-file-uploader",
-                "dist/ngx-file-uploader"
-            ],
-            "@uniprank/ngx-file-uploader/*": [
-                "dist/ngx-file-uploader/*"
-            ],
-            "styles-test-cases": [
-                "library/TestCases/src/styles"
-            ]
-        }
+  "files": [],
+  "references": [
+    {
+      "path": "./library/ngx-file-uploader/tsconfig.lib.json"
     },
-    "angularCompilerOptions": {
-        "fullTemplateTypeCheck": true,
-        "strictInjectionParameters": true
+    {
+      "path": "./library/ngx-file-uploader/tsconfig.spec.json"
+    },
+    {
+      "path": "./library/TestCases/tsconfig.app.json"
+    },
+    {
+      "path": "./library/TestCases/tsconfig.spec.json"
     }
+  ]
 }
