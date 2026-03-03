@@ -31,7 +31,7 @@ jobs:
         run: |
           OUTPUT=$(npm run test 2>&1) || true
           echo "$OUTPUT"
-          if echo "$OUTPUT" | grep -q "failed"; then
+          if echo "$OUTPUT" | grep -qE "[1-9][0-9]* failed"; then
             echo "::error::Tests have failures"
             exit 1
           fi
