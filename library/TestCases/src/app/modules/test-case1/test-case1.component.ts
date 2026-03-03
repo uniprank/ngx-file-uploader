@@ -107,7 +107,7 @@ export class TestCase1Component implements OnDestroy {
         if (value != null) {
             try {
                 return JSON.parse(value).error.text;
-            } catch (e) {}
+            } catch (_e) { /* parsing failed, return fallback */ }
         }
         return '';
     }
