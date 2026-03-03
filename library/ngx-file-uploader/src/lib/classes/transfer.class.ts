@@ -205,7 +205,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
 
     public validate(_file: FileManagerInterface): boolean {
         if (this.options.filters.length > 0) {
-            return this.options.filters.some((_filter) => _filter.validate(_file));
+            return this.options.filters.every((_filter) => _filter.validate(_file));
         }
         return true;
     }
