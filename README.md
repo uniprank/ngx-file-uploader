@@ -1,7 +1,7 @@
 [![npm version](https://img.shields.io/npm/v/@uniprank/ngx-file-uploader.svg?style=flat-square)](https://www.npmjs.com/package/@uniprank/ngx-file-uploader)
 [![npm downloads](https://img.shields.io/npm/dm/@uniprank/ngx-file-uploader.svg?style=flat-square)](https://npmjs.org/package/@uniprank/ngx-file-uploader)
 [![npm license](https://img.shields.io/npm/l/@uniprank/ngx-file-uploader.svg?style=flat-square)](https://npmjs.org/package/@uniprank/ngx-file-uploader)
-[![travis build](https://img.shields.io/travis/uniprank/ngx-file-uploader?label=Travis%3Abuild&style=flat-square)](https://travis-ci.org/uniprank/ngx-file-uploader)
+[![CI](https://img.shields.io/github/actions/workflow/status/uniprank/ngx-file-uploader/ci.yml?branch=master&style=flat-square)](https://github.com/uniprank/ngx-file-uploader/actions/workflows/ci.yml)
 [![codecov](https://img.shields.io/codecov/c/github/uniprank/ngx-file-uploader?style=flat-square)](https://codecov.io/gh/uniprank/ngx-file-uploader)
 
 # Angular File Upload
