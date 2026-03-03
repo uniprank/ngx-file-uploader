@@ -67,10 +67,10 @@ describe('FileUploadService', () => {
 
     it(`should not set the same hook twice to 'default'`, () => {
         expect(() => {
-            _service.setHook('default', HookTypeEnum.prepareUploadFile, (...args) => {
+            _service.setHook('default', HookTypeEnum.prepareUploadFile, (..._args) => {
                 console.log('Works');
             });
-            _service.setHook('default', HookTypeEnum.prepareUploadFile, (...args) => {
+            _service.setHook('default', HookTypeEnum.prepareUploadFile, (..._args) => {
                 console.log('Works');
             });
         }).toThrowError();
@@ -81,7 +81,7 @@ describe('FileUploadService', () => {
             _service.setHook(
                 'default',
                 HookTypeEnum.prepareUploadFile,
-                (...args) => {
+                (..._args) => {
                     console.log('Works');
                 },
                 3
@@ -89,7 +89,7 @@ describe('FileUploadService', () => {
             _service.setHook(
                 'default',
                 HookTypeEnum.prepareUploadFile,
-                (...args) => {
+                (..._args) => {
                     console.log('Works2');
                 },
                 1
@@ -120,8 +120,8 @@ describe('FileUploadService', () => {
 
             expect(_req.request.method).toBe('POST');
 
-            _service.setHook('default', HookTypeEnum.successUploadFile, (...args) => {
-                expect(args[0]).toEqual(_fileManager);
+            _service.setHook('default', HookTypeEnum.successUploadFile, (..._args) => {
+                expect(_args[0]).toEqual(_fileManager);
                 done();
             });
 
@@ -147,8 +147,8 @@ describe('FileUploadService', () => {
 
             expect(_req.request.method).toBe('POST');
 
-            _service.setHook('default', HookTypeEnum.cancelUploadFile, (...args) => {
-                expect(args[0]).toEqual(_fileManager);
+            _service.setHook('default', HookTypeEnum.cancelUploadFile, (..._args) => {
+                expect(_args[0]).toEqual(_fileManager);
                 done();
             });
 
@@ -191,8 +191,8 @@ describe('FileUploadService', () => {
             expect(_req[1].request.method).toBe('POST');
 
             let _cnt = 0;
-            _service.setHook('default', HookTypeEnum.successUploadFile, (...args) => {
-                expect(args[0]).toEqual(_fileManagerArray[_cnt++]);
+            _service.setHook('default', HookTypeEnum.successUploadFile, (..._args) => {
+                expect(_args[0]).toEqual(_fileManagerArray[_cnt++]);
                 if (_cnt === 2) {
                     done();
                 }
@@ -237,8 +237,8 @@ describe('FileUploadService', () => {
             expect(_req[1].request.method).toBe('POST');
 
             let _cnt = 0;
-            _service.setHook('default', HookTypeEnum.cancelUploadFile, (...args) => {
-                expect(args[0]).toEqual(_fileManagerArray[_cnt++]);
+            _service.setHook('default', HookTypeEnum.cancelUploadFile, (..._args) => {
+                expect(_args[0]).toEqual(_fileManagerArray[_cnt++]);
                 if (_cnt === 2) {
                     done();
                 }
