@@ -27,15 +27,15 @@ export class UploaderHook {
         return this._priority;
     }
 
-    public get callback(): (...args) => void | null {
+    public get callback(): (...args: any[]) => void | null {
         return this._callback;
     }
 
     private _type: HookTypeEnum | null = null;
-    private _callback: (...args) => void | null = null;
+    private _callback: (...args: any[]) => void | null = null;
     private _priority: number | null = null;
 
-    constructor(_hookType: HookTypeEnum, _callback: (...args) => void, _priority = 0) {
+    constructor(_hookType: HookTypeEnum, _callback: (...args: any[]) => void, _priority = 0) {
         this._type = _hookType;
         this._callback = _callback;
         this._priority = +_priority;

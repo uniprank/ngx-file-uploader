@@ -5,20 +5,17 @@ import { FILE_UPLOADER_CONFIG, FileUploadService } from './services/file-upload.
 import { ImagePreviewDirective, FileSelectDirective, FileDropDirective, ProgressBarDirective } from './directives';
 import { FileSizePipe } from './pipes';
 
-const providers = [FileUploadService];
-const directives = [FileDropDirective, FileSelectDirective, ImagePreviewDirective, ProgressBarDirective];
-const pipes = [FileSizePipe];
-
+/** @deprecated Use provideNgxFileUploader() and import standalone directives/pipes directly */
 @NgModule({
-    declarations: [...directives, ...pipes],
-    imports: [],
-    exports: [...directives, ...pipes]
+    imports: [FileDropDirective, FileSelectDirective, ImagePreviewDirective, ProgressBarDirective, FileSizePipe],
+    exports: [FileDropDirective, FileSelectDirective, ImagePreviewDirective, ProgressBarDirective, FileSizePipe]
 })
 export class NgxFileUploaderModule {
+    /** @deprecated Use provideNgxFileUploader() instead */
     public static forRoot(parameters: TransferOptionsInterface = {}): ModuleWithProviders<NgxFileUploaderModule> {
         return {
             ngModule: NgxFileUploaderModule,
-            providers: [...providers, { provide: FILE_UPLOADER_CONFIG, useValue: parameters }]
+            providers: [FileUploadService, { provide: FILE_UPLOADER_CONFIG, useValue: parameters }]
         };
     }
 }

@@ -1,15 +1,22 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
     selector: 'uni-test-case4',
+    standalone: true,
+    imports: [MarkdownComponent],
     templateUrl: './test-case4.component.html',
     styleUrls: ['./test-case4.component.scss']
 })
 export class TestCase4Component implements OnInit {
-    public markdown = require('raw-loader!./README.md');
-    public sections: Array<any> = [];
+    public markdown: string = '';
 
-    constructor() {}
+    constructor(private _httpClient: HttpClient) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this._httpClient.get('assets/docs/test-case4/README.md', { responseType: 'text' }).subscribe(content => {
+            this.markdown = content;
+        });
+    }
 }

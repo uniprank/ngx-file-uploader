@@ -1,74 +1,61 @@
-You can find the complete test case at GitHub. [Test Case 5](https://github.com/uniprank/ngx-scrollspy/tree/master/library/TestCases/src/app/modules/test-case5)
+# FileUploadService
 
-## InnerTestComponent HTML
+The `FileUploadService` provides a central registry for managing multiple file uploaders across your application.
 
-```html
-<nav>
-    <ul>
-        <li>OnPush</li>
-        <li *ngFor="let section of sections" [uniScrollItem]="section.id" [innerHtml]="section.name"></li>
-    </ul>
-</nav>
-```
+## Basic Usage
 
-```js
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FileUploadService, FileUploader } from '@uniprank/ngx-file-uploader';
+
 @Component({
-    selector: 'app-inner-test',
-    templateUrl: './inner-test.component.html',
-    styleUrls: ['./inner-test.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-example',
+    standalone: true,
+    imports: [],
+    template: ''
 })
-export class InnerTestComponent implements OnInit {
-    @Input() sections: Array<{ id: string, name: string }> = [];
+export class ExampleComponent implements OnInit {
+    public uploader!: FileUploader;
 
-    constructor() {}
-
-    ngOnInit() {}
-}
-```
-
-## TestCase5Component
-
-```js
-@Component({
-    selector: 'app-test-case5',
-    templateUrl: './test-case5.component.html',
-    styleUrls: ['./test-case5.component.scss']
-})
-export class TestCase5Component implements OnInit {
-    public sections: Array<any> = [];
-
-    constructor(private _scrollSpyService: ScrollSpyService) {}
+    constructor(private fileUploadService: FileUploadService) {}
 
     ngOnInit() {
-        // set offset because 2 sticky menu bars width single height of 50px
-        this._scrollSpyService.setOffset('window', 100);
-        setTimeout(() => {
-            this.sections = [
-                { id: 'section1', name: 'Section 1' },
-                { id: 'section2', name: 'Section 2' },
-                { id: 'section3', name: 'Section 3' }
-            ];
-        });
+        // Register an uploader
+        this.fileUploadService.registerUploadService(
+            'myUploader',
+            new FileUploader({ url: 'http://localhost:3000/api/upload' })
+        );
+
+        // Use Angular's HttpClient protocol
+        this.fileUploadService.useAngularProtocol('myUploader');
+
+        // Get the uploader
+        this.uploader = this.fileUploadService.getUploader('myUploader');
     }
 }
 ```
 
-## TestCase5Component HTML
+## Default Configuration
 
-```html
-<nav>
-    <ul>
-        <li uniScrollItem="section1">Section 1</li>
-        <li uniScrollItem="section2">Section 2</li>
-        <li uniScrollItem="section3">Section 3</li>
-        <li uniScrollItem="section4">Section 4</li>
-    </ul>
-</nav>
-<section uniScrollSpy="section1"></section>
-<section uniScrollSpy="section2"></section>
-<section uniScrollSpy="section3"></section>
-<section uniScrollSpy="section4"></section>
+When using `provideNgxFileUploader()` with config, a default uploader is automatically registered:
 
-<app-inner-test [sections]="sections"></app-inner-test>
+```typescript
+// app.config.ts
+provideNgxFileUploader({
+    url: 'http://localhost:3000/api/upload',
+    autoUpload: true
+})
 ```
+
+```typescript
+// In your component
+const uploader = this.fileUploadService.getUploader('default');
+```
+
+## Service Methods
+
+| Method | Description |
+|--------|-------------|
+| `registerUploadService(name, uploader)` | Register a named uploader |
+| `getUploader(name)` | Get a registered uploader by name |
+| `useAngularProtocol(name)` | Use Angular HttpClient for uploads |

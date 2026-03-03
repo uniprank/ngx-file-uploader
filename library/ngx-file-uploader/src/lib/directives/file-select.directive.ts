@@ -1,46 +1,28 @@
-// tslint:disable:max-line-length
-// tslint:disable:no-unused-expression
-import { Directive, EventEmitter, HostListener, HostBinding, Output, Input, OnInit, OnDestroy } from '@angular/core';
+import { Directive, HostListener, HostBinding, OnInit, OnDestroy, input, output } from '@angular/core';
 import { FileManager } from '../classes/file-manager.class';
 import { FileManagerOptionsInterface, instanceOfFileManagerInterface, FileManagerInterface, TransferInterface } from '../interfaces';
 
-//
-// Directive to support select file from inputfield
-//
 @Directive({
-    // Selector required in component HTML
-    // tslint:disable-next-line:directive-selector
-    selector: '[ngxFile2Select]'
+    selector: '[ngxFile2Select]',
+    standalone: true
 })
 export class FileSelectDirective implements OnInit, OnDestroy {
     @HostBinding('attr.role') role = 'input';
     @HostBinding('attr.type') type = 'file';
 
-    @Output()
-    public fileHoverStart: EventEmitter<any> = new EventEmitter<any>();
-    @Output()
-    public fileHoverEnd: EventEmitter<any> = new EventEmitter<any>();
-    @Output()
-    public fileAccepted: EventEmitter<FileManagerInterface[]> = new EventEmitter<FileManagerInterface[]>();
-    @Output()
-    public fileRejected: EventEmitter<Error> = new EventEmitter<Error>();
+    readonly fileOptions = input<FileManagerOptionsInterface>();
+    readonly uploader = input.required<TransferInterface<FileManagerInterface>>();
 
-    @Input()
-    public fileOptions: FileManagerOptionsInterface;
-    @Input()
-    public uploader: TransferInterface<FileManagerInterface>;
+    readonly fileHoverStart = output<void>();
+    readonly fileHoverEnd = output<void>();
+    readonly fileAccepted = output<FileManagerInterface[]>();
+    readonly fileRejected = output<Error>();
 
     private _InputFile: any = null;
     private _files: FileManagerInterface[];
 
-    //
-    // Constructor requires an element reference that instantiated this directive
-    //
-    public constructor() {}
+    constructor() {}
 
-    //
-    // Initialisation
-    //
     public ngOnInit() {
         this._files = [];
     }
@@ -51,19 +33,15 @@ export class FileSelectDirective implements OnInit, OnDestroy {
                 if (instanceOfFileManagerInterface(_file)) {
                     if (!_file.isUploaded()) {
                         _file.cancel();
-                        this.uploader.removeFile(_file);
+                        this.uploader().removeFile(_file);
                     }
                 }
             }
         }
     }
 
-    //
-    // Called when the element was choosen
-    //
     @HostListener('change', ['$event'])
     public onChange(event: Event): void {
-        // Update our data
         this._InputFile = this.getEventTarget(event);
 
         if (this._InputFile.files.length === 0) {
@@ -77,16 +55,11 @@ export class FileSelectDirective implements OnInit, OnDestroy {
 
         this.fileAccepted.emit(this._files);
 
-        // Finished with the file
         this._InputFile = null;
 
-        // Don't let it continue
         this.preventAndStopEventPropagation(event);
     }
 
-    //
-    // Stops the drag/drop events propagating
-    //
     private preventAndStopEventPropagation(event: Event): void {
         event.preventDefault();
         event.stopPropagation();
@@ -94,17 +67,12 @@ export class FileSelectDirective implements OnInit, OnDestroy {
 
     private readFile(_files: FileList): void {
         let fmObject: FileManager;
-        // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < _files.length; i++) {
             const file = _files[i];
             try {
-                fmObject = new FileManager(file, this.fileOptions, this.uploader);
+                fmObject = new FileManager(file, this.fileOptions(), this.uploader());
             } catch (e) {
-                if (e.status === 100) {
-                    this.fileRejected.emit(e);
-                } else {
-                    this.fileRejected.emit(e);
-                }
+                this.fileRejected.emit(e);
                 throw new Error('Something goes wrong e: ' + e.message);
             }
 
@@ -112,9 +80,6 @@ export class FileSelectDirective implements OnInit, OnDestroy {
         }
     }
 
-    //
-    // Returns the file dragged into the directive
-    //
     private getEventTarget(event: Event | any): any {
         return event.target;
     }

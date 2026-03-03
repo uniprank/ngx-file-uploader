@@ -1,5 +1,3 @@
-import { DatePipe } from '@angular/common';
-
 import { FileObject } from '../file-object.class';
 
 describe('FileObject', () => {
@@ -33,7 +31,7 @@ describe('FileObject', () => {
     it(`should return a file object with only given File mock with lastModifiedDate`, () => {
         const _time = new Date();
         const _mockFile = ({
-            lastModifiedDate: _time,
+            lastModified: _time.getTime(),
             size: 256,
             type: 'image/png',
             name: 'Test_Dummy-Image.png'

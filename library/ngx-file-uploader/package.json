@@ -1,6 +1,6 @@
 {
     "name": "@uniprank/ngx-file-uploader",
-    "version": "5.1.0",
+    "version": "5.2.0",
     "author": {
         "name": "Dennis Fiedler",
         "email": "npm-package@uniprank.com",
@@ -12,16 +12,19 @@
         "file upload",
         "files upload",
         "uploader",
+        "standalone",
+        "signals",
         "@uniprank"
     ],
     "homepage": "https://github.com/uniprank/ngx-file-uploader#readme",
-    "description": "This is a library allows you to upload files via angular with some more flexibility",
+    "description": "Angular file upload library with standalone components and signals support",
     "private": false,
     "dependencies": {
-        "tslib": "^2.0.0"
+        "tslib": "^2.6.0"
     },
     "peerDependencies": {
-        "@angular/common": ">=9.0.3",
-        "@angular/core": ">=9.0.3"
+        "@angular/common": ">=19.0.0",
+        "@angular/core": ">=19.0.0",
+        "rxjs": ">=7.0.0"
     }
 }

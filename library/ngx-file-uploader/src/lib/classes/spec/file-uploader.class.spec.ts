@@ -1,5 +1,6 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed, fakeAsync, async } from '@angular/core/testing';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 
 import { FileUploader } from '../file-uploader.class';
@@ -17,8 +18,7 @@ describe('FileUploader', () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: []
+            providers: [provideHttpClient(), provideHttpClientTesting()]
         });
 
         _httpClient = TestBed.inject(HttpClient);
@@ -75,7 +75,7 @@ describe('FileUploader', () => {
         );
     });
 
-    it(`should add new file to queue`, (done: DoneFn) => {
+    it(`should add new file to queue`, () => {
         const _fileUploaderDummy = new FileUploader(
             { ..._dummyConfig, ...{ uniqueFiles: true } },
             new AngularFileUploadProtocol(_httpClient)
@@ -83,14 +83,11 @@ describe('FileUploader', () => {
         const _file = new File(['sample'], 'sample.txt', { type: 'text/plain' });
         const _fileManager = new FileManager(_file);
 
-        _fileUploaderDummy.queue$.subscribe((data) => {
-            if (data != null && data.length === 1) {
-                expect(data[0]).toEqual(_fileManager);
-                done();
-            }
-        });
-
         _fileUploaderDummy.addFile(_fileManager);
+
+        const data = _fileUploaderDummy.queue();
+        expect(data.length).toBe(1);
+        expect(data[0]).toEqual(_fileManager);
 
         expect(_fileUploaderDummy.addFile(_fileManager)).toBeFalsy();
     });
@@ -140,6 +137,6 @@ describe('FileUploader', () => {
 
         _fileUploader.remove();
 
-        expect(_fileUploader.queueObs.length).toBe(0);
+        expect(_fileUploader.queueSnapshot.length).toBe(0);
     });
 });

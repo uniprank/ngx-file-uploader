@@ -6,37 +6,33 @@
         "sourceMap": true,
         "declaration": false,
         "downlevelIteration": true,
-        "experimentalDecorators": true,
-        "module": "es2020",
-        "moduleResolution": "node",
+        "module": "ES2022",
+        "moduleResolution": "bundler",
         "importHelpers": true,
-        "target": "es2015",
+        "target": "ES2022",
         "typeRoots": [
             "node_modules/@types"
         ],
         "lib": [
-            "es2018",
+            "ES2022",
             "dom"
         ],
         "paths": {
-            "ngx-file-uploader": [
-                "dist/ngx-file-uploader/ngx-file-uploader",
-                "dist/ngx-file-uploader"
-            ],
             "@uniprank/ngx-file-uploader": [
-                "dist/ngx-file-uploader/ngx-file-uploader",
                 "dist/ngx-file-uploader"
-            ],
-            "@uniprank/ngx-file-uploader/*": [
-                "dist/ngx-file-uploader/*"
             ],
             "styles-test-cases": [
                 "library/TestCases/src/styles"
             ]
         }
     },
+    "exclude": [
+        "server",
+        "node_modules"
+    ],
     "angularCompilerOptions": {
-        "fullTemplateTypeCheck": true,
-        "strictInjectionParameters": true
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     }
 }

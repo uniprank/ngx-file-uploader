@@ -1,7 +1,6 @@
-import { TransferOptionsInterface } from './transfer-options.interface';
-import { FileManagerOptionsInterface } from './file-manager-options.interface';
+import { Signal } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { TransferOptionsInterface } from './transfer-options.interface';
 import { UploaderHook, HookTypeEnum } from '../classes/uploader-hook.class';
 import { FileFilter } from '../classes/file-filter.class';
 import { Protocol } from '../classes/protocol.class';
@@ -10,15 +9,15 @@ export interface TransferInterface<T> {
     options: TransferOptionsInterface;
 
     id: string;
-    queue$: Observable<T[]>;
-    queueObs: T[];
+    queue: Signal<T[]>;
+    queueSnapshot: T[];
     type: string;
 
     bindOptions(options: TransferOptionsInterface): void;
     isHTML5(): boolean;
     isDragAndDrop(): boolean;
 
-    hook(hook: UploaderHook);
+    hook(hook: UploaderHook): void;
     removeHook(hook: UploaderHook): boolean;
     activeHooks(): string[];
 
@@ -40,9 +39,6 @@ export interface TransferInterface<T> {
     cancel(): void;
     remove(): void;
 
-    /**
-     * Overwrite functions
-     */
     onAddFile(file: T): void;
     onAddFileError(file: T): void;
     onRemoveFile(file: T): void;
@@ -57,9 +53,6 @@ export interface TransferInterface<T> {
     onComplete(file: T, response: any, status: number, headers: any): void;
     onCompleteAll(uploader: TransferInterface<T>): void;
 
-    /**
-     * Internal functions
-     */
     _onAddFile(file: T): void;
     _onAddFileError(file: T): void;
     _onRemoveFile(file: T): void;

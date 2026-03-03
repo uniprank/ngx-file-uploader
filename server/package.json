@@ -1,0 +1,29 @@
+{
+    "name": "ngx-file-uploader-server",
+    "version": "1.0.0",
+    "description": "Minimal NestJS upload server for ngx-file-uploader testing",
+    "private": true,
+    "scripts": {
+        "start": "nest start",
+        "start:dev": "nest start --watch",
+        "build": "nest build"
+    },
+    "dependencies": {
+        "@nestjs/common": "^11.0.0",
+        "@nestjs/core": "^11.0.0",
+        "@nestjs/platform-express": "^11.0.0",
+        "reflect-metadata": "^0.2.0",
+        "rxjs": "^7.8.0",
+        "multer": "^1.4.5-lts.1"
+    },
+    "devDependencies": {
+        "@nestjs/cli": "^11.0.0",
+        "@nestjs/schematics": "^11.0.0",
+        "@types/express": "^5.0.0",
+        "@types/multer": "^1.4.12",
+        "@types/node": "^22.0.0",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "~5.7.0"
+    }
+}

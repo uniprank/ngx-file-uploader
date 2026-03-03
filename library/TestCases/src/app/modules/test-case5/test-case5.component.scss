@@ -1,5 +1,3 @@
-@import '~library/TestCases/src/styles/library';
-
 :host {
     display: block;
     padding: 1rem;
@@ -8,7 +6,7 @@
         position: -webkit-sticky;
         position: sticky;
         top: 50px;
-        background-color: $orange;
+        background-color: var(--color-nav-accent);
 
         ul {
             margin: 0;
@@ -20,11 +18,11 @@
                 list-style: none;
                 margin: 0;
                 padding: 1rem;
-                color: $font-color-invert;
+                color: var(--color-text-invert);
 
                 &.active {
-                    color: $orange;
-                    background-color: white;
+                    color: var(--color-nav-accent);
+                    background-color: var(--color-bg);
                 }
             }
         }

@@ -1,22 +1,22 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-
-import * as Stickyfill from 'stickyfilljs';
-
-import { FileUploadService } from '@uniprank/ngx-file-uploader';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
     selector: 'uni-test-case3',
+    standalone: true,
+    imports: [MarkdownComponent],
     templateUrl: './test-case3.component.html',
     styleUrls: ['./test-case3.component.scss']
 })
-export class TestCase3Component implements OnInit, OnDestroy {
-    public markdown = require('raw-loader!./README.md');
-    public activeSection: BehaviorSubject<{ id?: string; elementId?: string; nativeElement?: HTMLElement }> = new BehaviorSubject({});
+export class TestCase3Component implements OnInit {
+    public markdown: string = '';
 
-    constructor(private _host: ElementRef) {}
+    constructor(private _httpClient: HttpClient) {}
 
-    ngOnInit() {}
-
-    ngOnDestroy() {}
+    ngOnInit() {
+        this._httpClient.get('assets/docs/test-case3/README.md', { responseType: 'text' }).subscribe(content => {
+            this.markdown = content;
+        });
+    }
 }

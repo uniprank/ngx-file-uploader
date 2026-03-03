@@ -5,8 +5,8 @@ describe('UploaderHook', () => {
         let _changedValue = '';
         const _hooks1 = new UploaderHook(
             HookTypeEnum.afterAddingFile,
-            (test) => {
-                _changedValue = test;
+            (...args: any[]) => {
+                _changedValue = args[0];
             },
             1
         );
