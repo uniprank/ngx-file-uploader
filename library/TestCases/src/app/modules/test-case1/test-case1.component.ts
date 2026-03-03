@@ -1,32 +1,46 @@
-import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, effect } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import { FileUploadService, FileUploader, FileFilter, HookTypeEnum, UploaderHook, FileManager } from '@uniprank/ngx-file-uploader';
-import { Subscription } from 'rxjs';
+import {
+    FileUploadService,
+    FileUploader,
+    FileFilter,
+    HookTypeEnum,
+    UploaderHook,
+    FileManager,
+    FileManagerInterface,
+    FileDropDirective,
+    FileSelectDirective,
+    ImagePreviewDirective,
+    ProgressBarDirective,
+    FileSizePipe
+} from '@uniprank/ngx-file-uploader';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'uni-test-case1',
+    standalone: true,
+    imports: [CommonModule, FormsModule, FileDropDirective, FileSelectDirective, ImagePreviewDirective, ProgressBarDirective, FileSizePipe],
     templateUrl: './test-case1.component.html',
     styleUrls: ['./test-case1.component.scss']
 })
-export class TestCase1Component implements OnInit, OnDestroy {
-    public markdown = require('raw-loader!./README.md');
-
+export class TestCase1Component implements OnDestroy {
     public uploader: FileUploader;
-    public hasFiles: boolean;
+    public hasFiles: boolean = false;
     public activeHooks: string[];
+    public previewFile: FileManagerInterface | null = null;
 
-    private _subs: Subscription;
-
-    constructor(private _host: ElementRef, private _fileUploadService: FileUploadService, private _httpClient: HttpClient) {
+    constructor(
+        private _fileUploadService: FileUploadService,
+        private _httpClient: HttpClient
+    ) {
         this.uploader = new FileUploader({
             url: 'https://api.uniprank.com/imageupload/api/upload',
             removeBySuccess: false,
             autoUpload: false,
             filters: [new FileFilter('only:JPG/PNG/GIF', new RegExp('image/jpeg|image/png|image/gif'), 'type')]
         });
-
-        // this.hookName = HookTypeEnum[HookTypeEnum.successUploadFile];
 
         this.uploader.hook(
             new UploaderHook(
@@ -56,8 +70,8 @@ export class TestCase1Component implements OnInit, OnDestroy {
          */
         this.uploader.hook(
             new UploaderHook(HookTypeEnum.removeFile, (file: FileManager) => {
-                if (file.success && file.isUploaded) {
-                    this._httpClient.delete(`https://api.uniprank.com/imageupload/api/delete/${file.name}`).toPromise();
+                if (file.success && file.isUploaded()) {
+                    this._httpClient.delete(`https://api.uniprank.com/imageupload/api/delete/${file.name}`).subscribe();
                 }
             })
         );
@@ -70,25 +84,23 @@ export class TestCase1Component implements OnInit, OnDestroy {
             });
         };
 
-        this._subs = this.uploader.queue$.subscribe(
-            (data: any) => {
-                this.hasFiles = data.length > 0;
-            },
-            (error: any) => {
-                throw new Error(error);
-            }
-        );
+        effect(() => {
+            this.hasFiles = this.uploader.queue().length > 0;
+        });
 
         this.activeHooks = this.uploader.activeHooks();
     }
 
-    ngOnInit() {}
-
     ngOnDestroy() {
-        if (this._subs) {
-            this._subs.unsubscribe();
-        }
         this.uploader.destroy();
+    }
+
+    public openPreview(file: FileManagerInterface) {
+        this.previewFile = file;
+    }
+
+    public closePreview() {
+        this.previewFile = null;
     }
 
     public convertError(value: any): string {

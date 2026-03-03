@@ -2,40 +2,38 @@
 
 You can find the complete test case at GitHub. [Test Case](https://github.com/uniprank/ngx-file-uploader/tree/master/library/TestCases/src/app/modules/test-case1)
 
-## File to upload (directive -> ngxFile2Drop)
+## File Drop (directive -> ngxFile2Drop)
 
-Link a uploader to the directive
+Link an uploader to the directive to enable drag & drop file upload.
 
 ```html
 <div ngxFile2Drop [uploader]="uploader"></div>
 ```
 
-## Input type="file" select one or multiple files (directive -> ngxFile2Select)
+## File Select (directive -> ngxFile2Select)
 
-Link a uploader to the directive
+Link an uploader to allow file selection via input.
 
 ```html
 <input ngxFile2Select type="file" id="file" multiple [uploader]="uploader" />
 ```
 
-## Image preview (directive -> imgPreview)
+## Image Preview (directive -> imgPreview)
 
-You need the uploader queue or a selected file as image input. **[**file is type FileManager**]**
+Display a preview of a file from the uploader queue.
 
 ```html
-<div *ngFor="let file of uploader.queue$ | async; let i = index">
-    <picture [class.success]="file?.success" [class.error]="file?.error">
-        <img src="" imgPreview [image]="file" />
-    </picture>
-</div>
+@for (file of uploader.queue(); track file.id) {
+    <img src="" imgPreview [image]="file" />
+}
 ```
 
-## Active progress bar for upload (directive -> progressBar)
+## Progress Bar (directive -> progressBar)
 
-You need a FileManager object to get the valid Promise (**file.progress\$**)
+Show upload progress for a file.
 
 ```html
-<div *ngFor="let file of uploader.queue$ | async; let i = index">
-    <progress progressBar [progress]="file?.progress$ | async" max="100"></progress>
-</div>
+@for (file of uploader.queue(); track file.id) {
+    <progress progressBar [progress]="file?.progressDetail()" max="100"></progress>
+}
 ```

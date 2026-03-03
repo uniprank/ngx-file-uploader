@@ -1,14 +1,11 @@
-@import '~library/TestCases/src/styles/library';
-
 :host {
     display: block;
     padding: 1rem;
 
     nav {
-        position: -webkit-sticky;
         position: sticky;
         top: 50px;
-        background-color: $orange;
+        background-color: var(--color-nav-accent);
 
         ul {
             margin: 0;
@@ -20,27 +17,13 @@
                 list-style: none;
                 margin: 0;
                 padding: 1rem;
-                color: $font-color-invert;
+                color: var(--color-text-invert);
 
                 &.active {
-                    color: $orange;
-                    background-color: white;
+                    color: var(--color-nav-accent);
+                    background-color: var(--color-bg);
                 }
             }
-        }
-    }
-
-    .template {
-        @include display-grid;
-        @include grid-template-columns(320px 1fr);
-        @include grid-template-rows(auto);
-
-        &>app-inner-test {
-            @include grid-column(1, 2);
-        }
-
-        &>div {
-            @include grid-column(2, 3);
         }
     }
 
@@ -48,13 +31,14 @@
         display: grid;
         grid-template-areas: "sidebar main";
         grid-template-columns: 320px 1fr;
+        grid-template-rows: auto;
 
         &>app-inner-test {
-            grid-template: sidebar;
+            grid-area: sidebar;
         }
 
         &>div {
-            grid-template: main;
+            grid-area: main;
         }
     }
 
@@ -67,17 +51,17 @@
 
         &.section1 {
             background-color: #003366;
-            color: $font-color-invert;
+            color: var(--color-text-invert);
         }
 
         &.section2 {
             background-color: #336699;
-            color: $font-color-invert;
+            color: var(--color-text-invert);
         }
 
         &.section3 {
             background-color: #6699CC;
-            color: $font-color-invert;
+            color: var(--color-text-invert);
         }
 
         &.section4 {

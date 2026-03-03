@@ -1,153 +1,207 @@
-<!-- <markdown>{{ markdown.default }}</markdown> -->
-<div class="panel panel-default">
-    <h1>File upload via [@uniprank/ngx-file-uploader]</h1>
-    <div class="panel-body" flex layout="row">
-        <div layout="column" style="max-width:340px">
-            <div layout="column">
-                <h3>Drop multiple files:</h3>
+<div class="page">
+    <header class="page-header">
+        <h1>File Upload Demo</h1>
+        <p>Configure your upload, select files, and monitor the progress in real time.</p>
+    </header>
+
+    <div class="columns">
+        <!-- Left column (30%) -->
+        <div class="col-left">
+            <!-- Step 1: Configure Upload -->
+            <div class="card">
+                <h3 class="section-title">
+                    <span class="step-number">1</span>
+                    Configure Upload
+                </h3>
+                <div class="form-group">
+                    <label class="form-label" for="upload-url">Upload URL</label>
+                    <input id="upload-url" class="form-input" type="text" name="url"
+                        [(ngModel)]="uploader.options.url" placeholder="https://..." />
+                </div>
+                <div class="switches">
+                    <label class="switch-row">
+                        <span class="switch-track">
+                            <input type="checkbox" name="AutoUpload" [(ngModel)]="uploader.options.autoUpload" />
+                            <span class="switch-knob"></span>
+                        </span>
+                        <span class="switch-label">Auto Upload</span>
+                    </label>
+                    <label class="switch-row">
+                        <span class="switch-track">
+                            <input type="checkbox" name="removeBySuccess"
+                                [(ngModel)]="uploader.options.removeBySuccess" />
+                            <span class="switch-knob"></span>
+                        </span>
+                        <span class="switch-label">Remove on Success</span>
+                    </label>
+                    <label class="switch-row">
+                        <span class="switch-track">
+                            <input type="checkbox" name="uniqueFiles"
+                                [(ngModel)]="uploader.options.uniqueFiles" />
+                            <span class="switch-knob"></span>
+                        </span>
+                        <span class="switch-label">Unique Files</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Step 2: Select Files -->
+            <div class="card">
+                <h3 class="section-title">
+                    <span class="step-number">2</span>
+                    Select Files
+                </h3>
                 <div ngxFile2Drop [uploader]="uploader"></div>
-                <p>
-                    <input ngxFile2Select class="inputfile inputfile-2" type="file" id="file" multiple
+                <div class="divider-or"><span>or</span></div>
+                <div class="file-btn-wrap">
+                    <input ngxFile2Select class="inputfile" type="file" id="file" multiple
                         [uploader]="uploader"
-                        [attr.data-multiple-caption]="(uploader.queue$ | async)?.length + ' files selected'" />
-                    <label for="file"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17"
-                            viewBox="0 0 20 17">
+                        [attr.data-multiple-caption]="uploader.queue().length + ' files selected'" />
+                    <label for="file" class="file-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="15" viewBox="0 0 20 17">
                             <path
                                 d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
                         </svg>
-                        <span>Choose a file&hellip;</span></label>
-                </p>
-            </div>
-            <div flex-grow layout="column">
-                <h2>Uploader options</h2>
-                <div layout="column">
-                    <p>
-                        <input class="input is-small" type="text" name="url" [(ngModel)]="uploader.options.url"
-                            style="width:100%" />
-                    </p>
-                    <div class="switcher">
-                        <div class="check">
-                            <label class="switch">
-                                <input type="checkbox" name="AutoUpload" [(ngModel)]="uploader.options.autoUpload" />
-                                <div class="slider round"></div>
-                            </label>
-                        </div>
-                        <strong>AutoUpload</strong>
-                    </div>
-                    <div class="switcher">
-                        <div class="check">
-                            <label class="switch">
-                                <input type="checkbox" name="removeBySuccess"
-                                    [(ngModel)]="uploader.options.removeBySuccess" />
-                                <div class="slider round"></div>
-                            </label>
-                        </div>
-                        <strong>Remove by Success</strong>
-                    </div>
-                    <div class="switcher">
-                        <div class="check">
-                            <label class="switch">
-                                <input type="checkbox" name="uniqueFiles" [(ngModel)]="uploader.options.uniqueFiles" />
-                                <div class="slider round"></div>
-                            </label>
-                        </div>
-                        <strong>Unique files</strong>
-                    </div>
+                        Browse files
+                    </label>
                 </div>
-                <h3>Uploader options</h3>
-                <pre class="code">{{ uploader.options | json }}</pre>
-                <h3>Hooks active</h3>
-                <ul>
-                    <li *ngFor="let _hook of activeHooks" [innerHtml]="_hook"></li>
-                </ul>
             </div>
+
+            <!-- Debug Info -->
+            <details class="card card-debug">
+                <summary class="debug-summary">Debug Info</summary>
+                <h4 class="debug-label">Uploader Options</h4>
+                <pre class="code">{{ uploader.options | json }}</pre>
+                <h4 class="debug-label">Active Hooks</h4>
+                <ul class="hooks-list">
+                    @for (_hook of activeHooks; track _hook) {
+                        <li [innerHtml]="_hook"></li>
+                    }
+                </ul>
+            </details>
         </div>
-        <div flex-grow layout="column" style="padding-left: 20px;">
-            <h2>Preview uploader table (example):</h2>
-            <div style="position: relative;">
-                <table style="width: 100%;" class="upload-list">
-                    <caption>
-                        Files in queue
-                        <strong [innerHTML]="(uploader.queue$ | async)?.length"></strong>
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th style="width: 10%; min-width: 142px;">Preview</th>
-                            <th style="width: 20%;">Name</th>
-                            <th>Progress</th>
-                            <th style="width: 12%;">Details</th>
-                            <th style="width: 25%;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngIf="hasFiles">
-                        <tr *ngFor="let file of uploader.queue$ | async; let i = index">
-                            <td class="image">
-                                <picture [class.success]="file?.success" [class.error]="file?.error"
-                                    [attr.data-error]="convertError(file?.response)"><img src="" imgPreview
-                                        [image]="file" style="max-width:142px;max-height:100px;"
-                                        alt="{{ convertError(file?.response) }}" /></picture>
-                            </td>
-                            <td><span [innerHTML]="file?.name"></span></td>
-                            <td><progress progressBar [progress]="file?.progress$ | async" max="100"></progress></td>
-                            <td>
-                                <div class="fileDetails">
-                                    <table>
-                                        <tr>
-                                            <th>Type</th>
-                                            <td><span [innerHTML]="file?.type"></span></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Size</th>
-                                            <td>
-                                                <span>{{ file?.size | fileSize }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Date</th>
-                                            <td>
-                                                <span>{{ file?.date | date: 'dd.MM.yyyy' }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Time</th>
-                                            <td>
-                                                <span>{{ file?.date | date: 'hh:mm:ss' }}</span>
-                                            </td>
-                                        </tr>
+
+        <!-- Right column (70%) -->
+        <div class="col-right">
+            <div class="card card-queue">
+                <h3 class="section-title">
+                    <span class="step-number">3</span>
+                    Upload Queue
+                    @if (hasFiles) {
+                        <span class="queue-badge">{{ uploader.queue().length }}</span>
+                    }
+                </h3>
+
+                @if (!hasFiles) {
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>No files in queue</p>
+                        <span>Drop files on the left or use the file browser to get started</span>
+                    </div>
+                }
+
+                @if (hasFiles) {
+                    <div class="file-list">
+                        <!-- Column headers -->
+                        <div class="file-list-header">
+                            <span class="fh-preview">Preview</span>
+                            <span class="fh-name">Name</span>
+                            <span class="fh-progress">Progress</span>
+                            <span class="fh-details">Details</span>
+                            <span class="fh-actions">Actions</span>
+                        </div>
+
+                        <!-- File rows -->
+                        @for (file of uploader.queue(); track file.id) {
+                            <div class="file-row" [class.file-row--success]="file?.success"
+                                [class.file-row--error]="file?.error">
+                                <div class="fr-preview" (click)="openPreview(file)" (keyup.enter)="openPreview(file)" tabindex="0" role="button">
+                                    <picture [class.success]="file?.success" [class.error]="file?.error"
+                                        [attr.data-error]="convertError(file?.response)"><img src=""
+                                            imgPreview [image]="file"
+                                            alt="{{ convertError(file?.response) }}" /></picture>
+                                </div>
+                                <div class="fr-name">
+                                    <span class="file-name" [innerHTML]="file?.name"></span>
+                                    <span class="file-meta">{{ file?.size | fileSize }} &middot; {{ file?.type }}</span>
+                                </div>
+                                <div class="fr-progress">
+                                    <progress progressBar [progress]="file?.progressDetail()" max="100"></progress>
+                                </div>
+                                <div class="fr-details">
+                                    <table class="detail-table">
+                                        <tr><th>Type</th><td><span [innerHTML]="file?.type"></span></td></tr>
+                                        <tr><th>Size</th><td>{{ file?.size | fileSize }}</td></tr>
+                                        <tr><th>Date</th><td>{{ file?.date | date: 'dd.MM.yy' }}</td></tr>
+                                        <tr><th>Time</th><td>{{ file?.date | date: 'HH:mm:ss' }}</td></tr>
                                     </table>
                                 </div>
-                            </td>
-                            <td class="actions">
-                                <button type="button" class="button is-success" (click)="file?.upload()"
-                                    [disabled]="!file?.canUpload()">
-                                    Upload
-                                </button>
-                                <button type="button" class="button is-warning" (click)="file?.cancel()"
-                                    [disabled]="!file?.isUploading()">
-                                    Cancel
-                                </button>
-                                <button type="button" class="button is-danger" (click)="file?.remove()">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5">
-                                © by uniprank 2020 <span class="smallID">[<small
-                                        [innerHTML]="uploader.id"></small>]</span>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div flex layout="row" class="actions" style="margin-top: 20px;">
-                    <button type="button" class="button is-success" *ngIf="hasFiles" (click)="uploader.upload()">Upload
-                        All</button>
-                    <button type="button" class="button is-warning" *ngIf="hasFiles" (click)="uploader.cancel()">Cancel
-                        All</button>
-                    <button type="button" class="button is-danger" *ngIf="hasFiles" (click)="uploader.remove()">Remove
-                        All</button>
-                </div>
+                                <div class="fr-actions">
+                                    <button type="button" class="btn-glass btn-glass--upload"
+                                        (click)="file?.upload()" [disabled]="!file?.canUpload()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="17 8 12 3 7 8" />
+                                            <line x1="12" y1="3" x2="12" y2="15" />
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        </svg>
+                                        Upload
+                                    </button>
+                                    <button type="button" class="btn-glass btn-glass--cancel"
+                                        (click)="file?.cancel()" [disabled]="!file?.isUploading()">Cancel</button>
+                                    <button type="button" class="btn-glass btn-glass--remove"
+                                        (click)="file?.remove()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="queue-footer">
+                        <span class="queue-id">&copy; uniprank <small [innerHTML]="uploader.id"></small></span>
+                        <div class="bulk-actions">
+                            <button type="button" class="btn-glass btn-glass--upload btn-glass--lg"
+                                (click)="uploader.upload()">Upload All</button>
+                            <button type="button" class="btn-glass btn-glass--cancel btn-glass--lg"
+                                (click)="uploader.cancel()">Cancel All</button>
+                            <button type="button" class="btn-glass btn-glass--remove btn-glass--lg"
+                                (click)="uploader.remove()">Remove All</button>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
+
+<!-- Image Preview Modal -->
+@if (previewFile) {
+    <div class="modal-backdrop" (click)="closePreview()" (keyup.escape)="closePreview()" tabindex="-1" role="dialog">
+        <div class="modal-content" (click)="$event.stopPropagation()" (keyup.escape)="closePreview()" role="document">
+            <button class="modal-close" (click)="closePreview()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+            <img src="" imgPreview [image]="previewFile" class="modal-image" alt="Preview" />
+            <div class="modal-info">
+                <strong [innerHTML]="previewFile.name"></strong>
+                <span>{{ previewFile.size | fileSize }} &middot; {{ previewFile.type }}</span>
+            </div>
+        </div>
+    </div>
+}

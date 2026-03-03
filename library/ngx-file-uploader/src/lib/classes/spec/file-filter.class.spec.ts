@@ -35,13 +35,13 @@ describe('FileFilter', () => {
     });
     describe('with type function', () => {
         it(`should validate against the given callback function return true`, () => {
-            const _fileFilterCallback = new FileFilter('callback', (file: FileManagerInterface) => {
+            const _fileFilterCallback = new FileFilter('callback', (_file: FileManagerInterface) => {
                 return true;
             });
             expect(_fileFilterCallback.validate(({ object: fileObject } as unknown) as FileManagerInterface)).toBeTruthy();
         });
         it(`should validate against the given callback function return false`, () => {
-            const _fileFilterCallback = new FileFilter('callback', (file: FileManagerInterface) => {
+            const _fileFilterCallback = new FileFilter('callback', (_file: FileManagerInterface) => {
                 return false;
             });
             expect(_fileFilterCallback.validate(({ object: fileObject } as unknown) as FileManagerInterface)).toBeFalsy();

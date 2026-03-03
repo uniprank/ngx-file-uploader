@@ -1,15 +1,16 @@
-import { Observable } from 'rxjs';
+import { Signal } from '@angular/core';
 
 import { FileManagerOptionsInterface } from './file-manager-options.interface';
+import { ProgressDetail } from './progress-detail.interface';
 import { FileObject } from '../classes/file-object.class';
 import { TransferInterface } from './transfer.interface';
 
 export interface FileManagerInterface {
     id: string;
     options: FileManagerOptionsInterface;
-    progressPercent$: Observable<number>;
-    progress$: Observable<any>;
-    progress: any;
+    progressPercent: Signal<number>;
+    progressDetail: Signal<ProgressDetail>;
+    progressValue: number;
     element: any;
     object: FileObject;
     name: string;
@@ -19,6 +20,7 @@ export interface FileManagerInterface {
     inQueue: boolean;
     success: boolean;
     error: boolean;
+    response: any;
 
     protocol(_protocol: any): void;
 
@@ -39,20 +41,14 @@ export interface FileManagerInterface {
 
     handleImageLoad(): void;
 
-    /**
-     * Overwrite functions
-     */
     onBeforeUpload(): void;
-    onProgressSpeed(speed: any): void;
+    onProgressSpeed(speed: ProgressDetail): void;
     onProgress(progress: number): void;
     onSuccess(response: any, status: number, headers: any): void;
     onError(response: any, status: number, headers: any): void;
 
-    /**
-     *  Internal functions
-     */
     _onBeforeUpload(): void;
-    _onProgressFileSpeed(speed: any);
+    _onProgressFileSpeed(speed: ProgressDetail): void;
     _onProgress(_progress: number): void;
     _onSuccess(response: any, status: number, headers: any): void;
     _onError(response: any, status: number, headers: any): void;
@@ -61,8 +57,8 @@ export interface FileManagerInterface {
 export function instanceOfFileManagerInterface(obj: any): obj is FileManagerInterface {
     return [
         'options',
-        'progressPercent$',
-        'progress$',
+        'progressPercent',
+        'progressDetail',
 
         'handleImageLoad',
         'canUpload',

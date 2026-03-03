@@ -1,19 +1,22 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { FileUploadService, FileUploader } from '@uniprank/ngx-file-uploader';
-
-import * as Stickyfill from 'stickyfilljs';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
     selector: 'uni-test-case2',
+    standalone: true,
+    imports: [MarkdownComponent],
     templateUrl: './test-case2.component.html',
     styleUrls: ['./test-case2.component.scss']
 })
 export class TestCase2Component implements OnInit {
-    public markdown = require('raw-loader!./README.md');
+    public markdown: string = '';
 
-    public uploader: FileUploader;
+    constructor(private _httpClient: HttpClient) {}
 
-    constructor(private _host: ElementRef, private _fileUploadService: FileUploadService) {}
-
-    ngOnInit() {}
+    ngOnInit() {
+        this._httpClient.get('assets/docs/test-case2/README.md', { responseType: 'text' }).subscribe(content => {
+            this.markdown = content;
+        });
+    }
 }

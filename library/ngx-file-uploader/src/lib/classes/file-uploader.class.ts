@@ -1,8 +1,7 @@
 import { Protocol, ProtocolXHR } from './protocol.class';
 import { Subscription } from 'rxjs';
 import { Transfer } from './transfer.class';
-import { FileManager } from './file-manager.class';
-import { TransferOptionsInterface, FileManagerOptionsInterface } from '../interfaces';
+import { TransferOptionsInterface } from '../interfaces';
 import { TransferInterface } from '../interfaces/transfer.interface';
 import { FileManagerInterface, instanceOfFileManagerInterface } from '../interfaces/file-manager.interface';
 
@@ -23,22 +22,22 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
     public init() {
         this.destroy();
 
-        const sub1 = this.getProtocol().progress.subscribe(
-            (obj: any) => {
+        const sub1 = this.getProtocol().progress.subscribe({
+            next: (obj: any) => {
                 const { _file, _data } = obj;
                 if (instanceOfFileManagerInterface(_file)) {
                     this._onProgressFile(_file, _data.percent);
                     this._onProgressFileSpeed(_file, _data);
                 }
             },
-            (error: any) => {
+            error: (error: any) => {
                 throw new Error(error);
             }
-        );
+        });
         this._subs.push(sub1);
 
-        const sub2 = this.getProtocol().load.subscribe(
-            (obj: any) => {
+        const sub2 = this.getProtocol().load.subscribe({
+            next: (obj: any) => {
                 const { _file, response, status, headers } = obj;
                 if (instanceOfFileManagerInterface(_file)) {
                     const uploader: TransferInterface<FileManagerInterface> = _file.getUploader();
@@ -54,14 +53,14 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
             },
-            (error: any) => {
+            error: (error: any) => {
                 throw new Error(error);
             }
-        );
+        });
         this._subs.push(sub2);
 
-        const sub3 = this.getProtocol().error.subscribe(
-            (obj: any) => {
+        const sub3 = this.getProtocol().error.subscribe({
+            next: (obj: any) => {
                 const { _file, response, status, headers } = obj;
                 if (instanceOfFileManagerInterface(_file)) {
                     const uploader: TransferInterface<FileManagerInterface> = _file.getUploader();
@@ -69,14 +68,14 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
             },
-            (error: any) => {
+            error: (error: any) => {
                 throw new Error(error);
             }
-        );
+        });
         this._subs.push(sub3);
 
-        const sub4 = this.getProtocol().abort.subscribe(
-            (obj: any) => {
+        const sub4 = this.getProtocol().abort.subscribe({
+            next: (obj: any) => {
                 const { _file, response, status, headers } = obj;
                 if (instanceOfFileManagerInterface(_file)) {
                     const uploader: TransferInterface<FileManagerInterface> = _file.getUploader();
@@ -84,10 +83,10 @@ export class FileUploader extends Transfer implements TransferInterface<FileMana
                     uploader._onCompleteFile(_file, response, status, headers);
                 }
             },
-            (error: any) => {
+            error: (error: any) => {
                 throw new Error(error);
             }
-        );
+        });
         this._subs.push(sub4);
     }
 

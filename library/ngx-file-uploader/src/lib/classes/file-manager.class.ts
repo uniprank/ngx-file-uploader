@@ -1,15 +1,16 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { signal, Signal } from '@angular/core';
 
 import { TransferInterface } from '../interfaces/transfer.interface';
 import { FileManagerOptionsInterface } from '../interfaces/file-manager-options.interface';
 import { FileManagerInterface } from '../interfaces/file-manager.interface';
+import { ProgressDetail } from '../interfaces/progress-detail.interface';
 
 import { FileObject } from './file-object.class';
 import { Utils } from './utils.class';
 
 const FileManagerOptionsDefault: FileManagerOptionsInterface = {};
 
-const speedObject: any = {
+const speedDefault: ProgressDetail = {
     total: 0,
     loaded: 0,
     percent: 0,
@@ -25,10 +26,9 @@ export class FileManager implements FileManagerInterface {
     private _uploader: TransferInterface<FileManagerInterface>;
     private _fileElement: any;
     private _file: FileObject;
-    private _speedDefault: any;
 
-    private _progress$: BehaviorSubject<number> = new BehaviorSubject(0);
-    private _speed$: BehaviorSubject<any> = new BehaviorSubject(speedObject);
+    private _progressSignal = signal(0);
+    private _speedSignal = signal<ProgressDetail>(speedDefault);
     private _isUploading: boolean;
     private _isUploaded: boolean;
     private _isSuccess: boolean;
@@ -47,16 +47,12 @@ export class FileManager implements FileManagerInterface {
         return this._id;
     }
 
-    public get progressPercent$(): Observable<number> {
-        return this._progress$.asObservable();
-    }
+    public readonly progressPercent: Signal<number> = this._progressSignal.asReadonly();
 
-    public get progress$(): Observable<any> {
-        return this._speed$.asObservable();
-    }
+    public readonly progressDetail: Signal<ProgressDetail> = this._speedSignal.asReadonly();
 
-    public get progress(): any {
-        return this._progress$.getValue();
+    public get progressValue(): number {
+        return this._progressSignal();
     }
 
     public get element(): any {
@@ -106,7 +102,6 @@ export class FileManager implements FileManagerInterface {
      */
     constructor(file: any, options?: FileManagerOptionsInterface, uploader?: TransferInterface<FileManagerInterface>) {
         this.options = Object.assign({}, FileManagerOptionsDefault, options);
-        this._speedDefault = {};
 
         this._id = Utils.uniqueID();
 
@@ -177,7 +172,7 @@ export class FileManager implements FileManagerInterface {
 
         try {
             _uploader.uploadFile(this);
-        } catch (e) {
+        } catch (_e) {
             // TODO write error handling
         }
     }
@@ -249,22 +244,18 @@ export class FileManager implements FileManagerInterface {
     onBeforeUpload(): void {
         return;
     }
-    onProgressSpeed(speed: any): void {
-        speed = speed;
+    onProgressSpeed(_speed: ProgressDetail): void {
+        // override in subclass
     }
 
-    onProgress(progress: number): void {
-        progress = progress;
+    onProgress(_progress: number): void {
+        // override in subclass
     }
-    onSuccess(response: any, status: number, headers: any): void {
-        response = response;
-        status = status;
-        headers = headers;
+    onSuccess(_response: any, _status: number, _headers: any): void {
+        // override in subclass
     }
-    onError(response: any, status: number, headers: any): void {
-        response = response;
-        status = status;
-        headers = headers;
+    onError(_response: any, _status: number, _headers: any): void {
+        // override in subclass
     }
 
     /**
@@ -276,17 +267,17 @@ export class FileManager implements FileManagerInterface {
         this._isSuccess = false;
         this._isCancel = false;
         this._isError = false;
-        this._progress$.next(0);
+        this._progressSignal.set(0);
         this.onBeforeUpload();
     }
 
-    _onProgressFileSpeed(speed: any) {
-        this._speed$.next(speed);
+    _onProgressFileSpeed(speed: ProgressDetail) {
+        this._speedSignal.set(speed);
         this.onProgressSpeed(speed);
     }
 
     _onProgress(progress: number): void {
-        this._progress$.next(progress);
+        this._progressSignal.set(progress);
         this.onProgress(progress);
     }
 

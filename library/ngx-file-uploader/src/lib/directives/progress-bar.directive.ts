@@ -1,23 +1,26 @@
-import { Directive, ElementRef, Input, Renderer2, OnChanges } from '@angular/core';
+import { Directive, ElementRef, Renderer2, effect, input } from '@angular/core';
+import { ProgressDetail } from '../interfaces/progress-detail.interface';
 import { FileSizePipe } from '../pipes/file-size.pipe';
 
-// tslint:disable:directive-selector
 @Directive({
-    selector: 'progress[progressBar]'
+    selector: 'progress[progressBar]',
+    standalone: true
 })
-export class ProgressBarDirective implements OnChanges {
-    @Input() progress: any;
+export class ProgressBarDirective {
+    readonly progress = input<ProgressDetail>();
 
-    constructor(private el: ElementRef, private renderer: Renderer2) {}
-
-    ngOnChanges() {
-        const el = this.el;
-        el.nativeElement.value = this.progress.percent;
-        if (this.progress.speed > 0) {
-            const pipe = new FileSizePipe();
-            this.renderer.setAttribute(this.el.nativeElement, 'speedText', pipe.transform(this.progress.loaded));
-        } else {
-            this.renderer.setAttribute(this.el.nativeElement, 'speedText', '');
-        }
+    constructor(private el: ElementRef, private renderer: Renderer2) {
+        effect(() => {
+            const p = this.progress();
+            if (p) {
+                this.el.nativeElement.value = p.percent;
+                if (p.speed > 0) {
+                    const pipe = new FileSizePipe();
+                    this.renderer.setAttribute(this.el.nativeElement, 'speedText', pipe.transform(p.loaded));
+                } else {
+                    this.renderer.setAttribute(this.el.nativeElement, 'speedText', '');
+                }
+            }
+        });
     }
 }

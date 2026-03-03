@@ -1,4 +1,5 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
 import { FileUploadService, FILE_UPLOADER_CONFIG } from '../file-upload.service';
@@ -15,8 +16,11 @@ describe('FileUploadService', () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [FileUploadService, { provide: FILE_UPLOADER_CONFIG, useValue: _dummyConfig }]
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                { provide: FILE_UPLOADER_CONFIG, useValue: _dummyConfig }
+            ]
         });
 
         _service = TestBed.inject(FileUploadService);
@@ -55,7 +59,7 @@ describe('FileUploadService', () => {
 
     it(`should set a hook to a uploader 'default'`, () => {
         expect(() =>
-            _service.setHook('default', HookTypeEnum.prepareUploadFile, (...args) => {
+            _service.setHook('default', HookTypeEnum.prepareUploadFile, (..._args) => {
                 console.log('Works');
             })
         ).not.toThrowError();
@@ -106,7 +110,7 @@ describe('FileUploadService', () => {
 
             _service.addFile('default', _fileManager);
 
-            expect(_uploader.queueObs[0]).toEqual(_fileManager);
+            expect(_uploader.queueSnapshot[0]).toEqual(_fileManager);
         });
 
         it(`should start a file upload`, (done: DoneFn) => {
@@ -173,8 +177,8 @@ describe('FileUploadService', () => {
 
             _service.addFiles('default', _fileManagerArray);
 
-            expect(_uploader.queueObs[0]).toEqual(_fileManagerArray[0]);
-            expect(_uploader.queueObs[1]).toEqual(_fileManagerArray[1]);
+            expect(_uploader.queueSnapshot[0]).toEqual(_fileManagerArray[0]);
+            expect(_uploader.queueSnapshot[1]).toEqual(_fileManagerArray[1]);
         });
 
         it(`should start uploading all files`, (done: DoneFn) => {

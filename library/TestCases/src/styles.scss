@@ -1,13 +1,134 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900');
-@import "./styles/bulma";
+
+// Dark theme mixin (single source of truth)
+@mixin _dark-theme {
+    --color-bg: #1a1a2e;
+    --color-bg-secondary: #16213e;
+    --color-surface: #1e2a45;
+
+    --color-text: #e0e0e0;
+    --color-text-muted: #a0a0b0;
+    --color-text-invert: #1a1a2e;
+
+    --color-table-header: #0f3460;
+    --color-table-header-text: #d5dde5;
+    --color-table-border: #2a2a4a;
+    --color-table-row-alt: #16213e;
+    --color-table-caption: #0f3460;
+
+    --color-border: #2a2a4a;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+    --color-progress-bg: #2a2a4a;
+    --color-progress-bar: #4ecca3;
+    --color-accent: #64b5f6;
+    --color-error: #ff6b6b;
+    --color-success: #4ecca3;
+    --color-drop-border: #6a6a8a;
+    --color-drop-hover: rgba(255, 255, 255, 0.05);
+
+    --color-btn-primary: #e94560;
+    --color-btn-primary-hover: #c81e45;
+    --color-btn-primary-text: #f1e5e6;
+
+    --color-input-bg: #16213e;
+    --color-input-border: #2a2a4a;
+    --color-input-text: #e0e0e0;
+
+    --color-switch-track: #4a4a6a;
+    --color-switch-knob: #e0e0e0;
+
+    // Glass (dark mode)
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-bg-hover: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-hover: rgba(255, 255, 255, 0.18);
+    --glass-highlight: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.18);
+    --glass-header-bg: rgba(255, 255, 255, 0.05);
+    --glass-row-bg: rgba(255, 255, 255, 0.04);
+    --glass-footer-border: rgba(255, 255, 255, 0.06);
+}
+
+// Light theme defaults
+:root {
+    // Backgrounds
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f5f5f5;
+    --color-surface: #ffffff;
+
+    // Text
+    --color-text: #292f33;
+    --color-text-muted: #666b85;
+    --color-text-invert: #eaecee;
+
+    // Nav
+    --color-nav: #0F3686;
+    --color-nav-accent: #ff9240;
+
+    // Table
+    --color-table-header: #1b1e24;
+    --color-table-header-text: #d5dde5;
+    --color-table-border: #c1c3d1;
+    --color-table-row-alt: #ebebeb;
+    --color-table-caption: #9ea7af;
+
+    // UI
+    --color-border: #c1c3d1;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-progress-bg: #f3f3f3;
+    --color-progress-bar: darkseagreen;
+    --color-accent: #2196f3;
+    --color-error: darkred;
+    --color-success: darkseagreen;
+    --color-drop-border: dimgray;
+    --color-drop-hover: rgba(0, 0, 0, 0.1);
+
+    // Button (file input)
+    --color-btn-primary: #d3394c;
+    --color-btn-primary-hover: #722040;
+    --color-btn-primary-text: #f1e5e6;
+
+    // Input
+    --color-input-bg: #ffffff;
+    --color-input-border: #dbdbdb;
+    --color-input-text: #292f33;
+
+    // Switch
+    --color-switch-track: #ccc;
+    --color-switch-knob: #ffffff;
+
+    // Glass (light mode)
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-bg-hover: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-hover: rgba(0, 0, 0, 0.14);
+    --glass-highlight: rgba(255, 255, 255, 0.9);
+    --glass-shadow: rgba(0, 0, 0, 0.06);
+    --glass-header-bg: rgba(0, 0, 0, 0.03);
+    --glass-row-bg: rgba(0, 0, 0, 0.02);
+    --glass-footer-border: rgba(0, 0, 0, 0.06);
+}
+
+// Auto dark mode (system preference), unless explicitly set to light
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include _dark-theme;
+    }
+}
+
+// Forced dark mode (manual)
+:root[data-theme="dark"] {
+    @include _dark-theme;
+}
 
 html,
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
-    // color: #141823;
-    color: #292f33;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1 {
@@ -32,12 +153,4 @@ h4 {
 
 pre[class*="language-"] {
     border-radius: 0 !important;
-}
-
-div.panel {
-    padding: 1em;
-}
-
-button {
-    margin-right: 1em;
 }

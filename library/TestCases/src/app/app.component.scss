@@ -1,10 +1,7 @@
-@import '~library/TestCases/src/styles/library';
-
 :host {
     display: block;
 
     header {
-        position: -webkit-sticky;
         position: sticky;
         top: 0;
         max-height: 50px;
@@ -12,19 +9,50 @@
         z-index: 100;
 
         nav {
-            background-color: $blue;
+            background-color: var(--color-nav);
             display: flex;
             flex-direction: row;
+            align-items: center;
 
             a {
                 padding: 1rem;
-                color: rgba($font-color-invert, .8);
+                color: rgba(255, 255, 255, 0.8);
                 text-decoration: none;
 
                 &.router-link-active {
-                    color: $font-color-invert;
+                    color: #ffffff;
                     font-weight: bold;
                 }
+            }
+        }
+    }
+
+    .theme-switcher {
+        margin-left: auto;
+        display: flex;
+        gap: 2px;
+        padding-right: 0.5rem;
+
+        button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin: 0;
+            transition: all 0.2s ease;
+
+            &:hover {
+                border-color: rgba(255, 255, 255, 0.6);
+                color: rgba(255, 255, 255, 0.9);
+            }
+
+            &.active {
+                background-color: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.8);
+                color: #ffffff;
             }
         }
     }

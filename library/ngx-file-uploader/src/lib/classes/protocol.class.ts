@@ -1,21 +1,17 @@
-import { EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Utils } from './utils.class';
 import { FileSizePipe } from '../pipes/file-size.pipe';
 import { FileManagerInterface } from '../interfaces/file-manager.interface';
 import { TransferInterface } from '../interfaces/transfer.interface';
 
-// tslint:disable:max-line-length
-
-const { FormData } = <any>window;
-
 /**
  * Abstract proctol class if someone want to write his own protocol
  */
 export abstract class Protocol {
-    progress: EventEmitter<any>;
-    load: EventEmitter<any>;
-    error: EventEmitter<any>;
-    abort: EventEmitter<any>;
+    progress: Subject<any>;
+    load: Subject<any>;
+    error: Subject<any>;
+    abort: Subject<any>;
 
     public set connection(obj: any) {
         const { _file, _connection } = obj;
@@ -27,7 +23,6 @@ export abstract class Protocol {
         }
     }
 
-    private _id: string;
     private _connections: any[];
 
     /**
@@ -36,11 +31,10 @@ export abstract class Protocol {
      * @memberOf Protocol
      */
     constructor() {
-        this._id = Utils.uniqueID();
-        this.progress = new EventEmitter<any>();
-        this.load = new EventEmitter<any>();
-        this.error = new EventEmitter<any>();
-        this.abort = new EventEmitter<any>();
+        this.progress = new Subject<any>();
+        this.load = new Subject<any>();
+        this.error = new Subject<any>();
+        this.abort = new Subject<any>();
         this._connections = [];
     }
 
@@ -197,29 +191,29 @@ export class ProtocolXHR extends Protocol {
                     speed: _speed,
                     speedToText: _speedToText
                 };
-                this.progress.emit({ _file: _file, _data: _obj });
+                this.progress.next({ _file: _file, _data: _obj });
             }
         };
 
-        const _loadHandler = (event) => {
+        const _loadHandler = (_event: Event) => {
             const headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
             const response = uploader._transformResponse(_xhr.response, headers);
             const status = _xhr.status;
-            this.load.emit({ _file: _file, response: response, status: status, headers: headers });
+            this.load.next({ _file: _file, response: response, status: status, headers: headers });
         };
 
-        const _errorHandler = (event) => {
+        const _errorHandler = (_event: Event) => {
             const headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
             const response = uploader._transformResponse(_xhr.response, headers);
             const status = _xhr.status;
-            this.error.emit({ _file: _file, response: response, status: status, headers: headers });
+            this.error.next({ _file: _file, response: response, status: status, headers: headers });
         };
 
-        const _abortHandler = (event) => {
+        const _abortHandler = (_event: Event) => {
             const headers = uploader._parseHeaders(_xhr.getAllResponseHeaders());
             const response = uploader._transformResponse(_xhr.response, headers);
             const status = _xhr.status;
-            this.abort.emit({ _file: _file, response: response, status: status, headers: headers });
+            this.abort.next({ _file: _file, response: response, status: status, headers: headers });
         };
 
         _xhr.upload.addEventListener('progress', _progress);
@@ -250,7 +244,7 @@ export class ProtocolXHR extends Protocol {
 
     public cancel(_file: FileManagerInterface) {
         const _request = this.isConnected(_file);
-        if (!!_request) {
+        if (_request) {
             _request.connection.abort();
             this.removeConnection(_file);
         }

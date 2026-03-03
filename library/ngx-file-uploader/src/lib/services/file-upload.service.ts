@@ -1,4 +1,4 @@
-import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { HookTypeEnum, UploaderHook, ProtocolXHR, FileUploader } from '../classes';
@@ -9,15 +9,17 @@ interface UploadServiceInterface {
     uploader: TransferInterface<FileManagerInterface>;
 }
 
-export const FILE_UPLOADER_CONFIG = new InjectionToken<TransferOptionsInterface>(null);
+export const FILE_UPLOADER_CONFIG = new InjectionToken<TransferOptionsInterface>('FILE_UPLOADER_CONFIG');
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FileUploadService {
     private _uploadServices: { [key: string]: UploadServiceInterface } = {};
+    private _httpClient = inject(HttpClient);
+    private _config = inject(FILE_UPLOADER_CONFIG, { optional: true });
 
-    constructor(private _httpClient: HttpClient, @Inject(FILE_UPLOADER_CONFIG) @Optional() private _config?: TransferOptionsInterface) {
-        if (_config && _config.url) {
-            this.registerUploadService('default', new FileUploader(_config));
+    constructor() {
+        if (this._config && this._config.url) {
+            this.registerUploadService('default', new FileUploader(this._config));
             this.useAngularProtocol('default');
         }
     }
@@ -34,7 +36,7 @@ export class FileUploadService {
         };
     }
 
-    public setHook(uploaderKey: string, type: HookTypeEnum, fnCallback: (...args) => void, priority = 0): void {
+    public setHook(uploaderKey: string, type: HookTypeEnum, fnCallback: (...args: any[]) => void, priority = 0): void {
         this._checkUploader(uploaderKey);
 
         this._uploadServices[uploaderKey].uploader.hook(new UploaderHook(type, fnCallback, priority));
@@ -102,7 +104,6 @@ export class FileUploadService {
         this._uploadServices[uploaderKey].uploader.cancelUploadFile(file);
     }
 
-    /** Internal Function */
     private _checkUploader(uploaderKey: string): void {
         if (this._uploadServices[uploaderKey] == null) {
             throw new Error(`Upload service with the key [${uploaderKey}] doesn't exists.`);

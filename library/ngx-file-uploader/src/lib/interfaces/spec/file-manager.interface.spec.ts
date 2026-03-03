@@ -1,13 +1,11 @@
-import { DatePipe } from '@angular/common';
-
 import { instanceOfFileManagerInterface } from '../file-manager.interface';
 
 describe('FileManagerInterface function', () => {
     it(`should return true`, () => {
         const _mockFileManager = {
             options: true,
-            progressPercent$: true,
-            progress$: true,
+            progressPercent: true,
+            progressDetail: true,
 
             handleImageLoad: true,
             canUpload: true,

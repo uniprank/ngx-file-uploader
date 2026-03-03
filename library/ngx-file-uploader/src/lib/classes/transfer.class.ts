@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { signal, Signal } from '@angular/core';
 import { Utils } from './utils.class';
 import { Protocol } from './protocol.class';
 import { HookTypeEnum, UploaderHook } from './uploader-hook.class';
@@ -6,8 +6,6 @@ import { FileFilter } from './file-filter.class';
 import { TransferOptionsInterface } from '../interfaces';
 import { TransferInterface } from '../interfaces/transfer.interface';
 import { FileManagerInterface } from '../interfaces/file-manager.interface';
-
-// tslint:disable: no-unused-expression
 
 /**
  * An abstract class for the transport functionality
@@ -31,27 +29,23 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
 
     public options: TransferOptionsInterface;
 
+    // Private fields declared first so dependent public fields can reference them
+    private _id: string;
+    private _queueSignal = signal<FileManagerInterface[]>([]);
+    private _hooks: UploaderHook[];
+    private _isHTML5: boolean;
+    private _isDragAndDrop: boolean;
+    private _protocol: Protocol;
+
     public get id(): any {
         return this._id;
     }
 
-    public get queue$(): Observable<FileManagerInterface[]> {
-        return this._$queue.asObservable();
+    public readonly queue: Signal<FileManagerInterface[]> = this._queueSignal.asReadonly();
+
+    public get queueSnapshot(): FileManagerInterface[] {
+        return this._queueSignal();
     }
-
-    public get queueObs(): FileManagerInterface[] {
-        return this._queue;
-    }
-
-    private _id: string;
-    private _$queue: BehaviorSubject<FileManagerInterface[]> = new BehaviorSubject([]);
-    private _queue: FileManagerInterface[] = [];
-    private _hooks: UploaderHook[];
-
-    private _isHTML5: boolean;
-    private _isDragAndDrop: boolean;
-
-    private _protocol: Protocol;
 
     /**
      * Creates an instance of Transfer.
@@ -152,7 +146,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         let _valid = false;
         try {
             _valid = this.validate(file);
-        } catch (e) {
+        } catch (_e) {
             _valid = false;
         }
         if (!_valid) {
@@ -160,12 +154,12 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
             return false;
         }
 
-        const queue = this._queue;
         if (this.options.uniqueFiles) {
             if (this.inQueue(file) === -1) {
                 this._runHook(HookTypeEnum.beforeAddingFile, file);
+                const queue = [...this._queueSignal()];
                 queue.push(file);
-                this._$queue.next(queue);
+                this._queueSignal.set(queue);
                 this._onAddFile(file);
                 this._runHook(HookTypeEnum.afterAddingFile, file);
                 this.options.autoUpload && file.upload();
@@ -173,8 +167,9 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
             }
         } else {
             this._runHook(HookTypeEnum.beforeAddingFile, file);
+            const queue = [...this._queueSignal()];
             queue.push(file);
-            this._$queue.next(queue);
+            this._queueSignal.set(queue);
             this._onAddFile(file);
             this._runHook(HookTypeEnum.afterAddingFile, file);
             this.options.autoUpload && file.upload();
@@ -187,8 +182,9 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
     public removeFile(_file: FileManagerInterface): boolean {
         const key = this.inQueue(_file);
         if (key !== -1) {
-            this._queue.splice(key, 1);
-            this._$queue.next(this._queue);
+            const queue = [...this._queueSignal()];
+            queue.splice(key, 1);
+            this._queueSignal.set(queue);
             this._onRemoveFile(_file);
             return true;
         }
@@ -196,7 +192,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
     }
 
     public inQueue(_file: FileManagerInterface): number {
-        return this._queue.findIndex((obj) => {
+        return this._queueSignal().findIndex((obj) => {
             return obj.id === _file.id || obj.name + obj.type + obj.size === _file.name + _file.type + _file.size;
         });
     }
@@ -236,17 +232,17 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
      */
     public upload() {
         this._onBeforeUploadAll();
-        for (const _file of this.queueObs) {
+        for (const _file of this.queueSnapshot) {
             this.uploadFile(_file);
         }
     }
     public cancel() {
-        for (const _file of this.queueObs) {
+        for (const _file of this.queueSnapshot) {
             this.cancelUploadFile(_file);
         }
     }
     public remove() {
-        const _queue = [...this.queueObs];
+        const _queue = [...this.queueSnapshot];
         for (const _file of _queue) {
             this.removeFile(_file);
         }
@@ -260,8 +256,8 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
     }
     public cancelUploadFile(item: FileManagerInterface) {
         if (this.inQueue(item) !== -1) {
-            item.isUploading && this.getProtocol().cancel(item);
-            item.isUploading && item._cancel();
+            item.isUploading() && this.getProtocol().cancel(item);
+            item.isUploading() && item._cancel();
         }
     }
 
@@ -345,14 +341,14 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
         this._onProgress();
     }
     public _onProgress(): void {
-        const queue: FileManagerInterface[] = this._queue;
+        const queue: FileManagerInterface[] = this._queueSignal();
         if (queue.length > 0) {
             let percent = 0;
             for (const file of queue) {
                 if (file.success || file.error) {
                     percent += 100;
-                } else if (file.isUploading) {
-                    percent += file.progress;
+                } else if (file.isUploading()) {
+                    percent += file.progressValue;
                 }
             }
             percent = Math.floor(percent / queue.length);
@@ -410,15 +406,14 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
 
         return parsed;
     }
-    public _transformResponse(response: any, headers: any): void {
-        headers = {};
+    public _transformResponse(response: any, _headers: any): any {
         return response;
     }
 
     public _runHook(type: HookTypeEnum, ...args: any[]): void {
         for (const key in this._hooks) {
             if (this._hooks.hasOwnProperty(key)) {
-                const obj = this._hooks[key];
+                const obj: UploaderHook = this._hooks[key];
                 if (obj.type === type) {
                     switch (type) {
                         case HookTypeEnum.beforeAddingFile:
@@ -430,14 +425,14 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
                         case HookTypeEnum.progressUploadAll:
                         case HookTypeEnum.removeFile:
                             {
-                                (<(...args) => void>obj.callback)(args[0]);
+                                (<(...args: any[]) => void>obj.callback)(args[0]);
                             }
                             break;
 
                         case HookTypeEnum.progressUploadFile:
                         case HookTypeEnum.progressUploadSpeed:
                             {
-                                (<(...args) => void>obj.callback)(args[0], args[1]);
+                                (<(...args: any[]) => void>obj.callback)(args[0], args[1]);
                             }
                             break;
 
@@ -446,7 +441,7 @@ export abstract class Transfer implements TransferInterface<FileManagerInterface
                         case HookTypeEnum.failedUploadFile:
                         case HookTypeEnum.completeUploadFile:
                             {
-                                (<(...args) => void>obj.callback)(args[0], args[1], args[2], args[3]);
+                                (<(...args: any[]) => void>obj.callback)(args[0], args[1], args[2], args[3]);
                             }
                             break;
 
