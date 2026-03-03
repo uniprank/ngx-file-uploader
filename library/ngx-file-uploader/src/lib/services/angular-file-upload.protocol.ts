@@ -125,7 +125,7 @@ export class AngularFileUploadProtocol extends Protocol {
 
     public cancel(_file: FileManagerInterface) {
         const _request = this.isConnected(_file);
-        if (!!_request) {
+        if (_request) {
             this.ngUnsubscribe.next();
             this.ngUnsubscribe.complete();
             this.abort.next({ _file: _file, response: {}, status: 999, headers: {} });
