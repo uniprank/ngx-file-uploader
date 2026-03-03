@@ -55,6 +55,7 @@ export class FileSelectDirective implements OnInit, OnDestroy {
 
         this.fileAccepted.emit(this._files);
 
+        this._InputFile.value = '';
         this._InputFile = null;
 
         this.preventAndStopEventPropagation(event);
