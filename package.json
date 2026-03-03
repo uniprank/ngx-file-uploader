@@ -10,7 +10,7 @@
         "start:server": "cd server && npm run start:dev",
         "start:all": "npm run start & npm run start:server",
         "lint": "ng lint",
-        "publish": "cd dist/ngx-file-uploader && npm publish --access public",
+        "release:publish": "rm -rf dist/ngx-file-uploader && npm run build && cd dist/ngx-file-uploader && npm publish --access public",
         "version": "npm pkg set version=$npm_package_version --prefix library/ngx-file-uploader && git add library/ngx-file-uploader/package.json",
         "release:major": "npm version major && git push origin && git push origin --tags",
         "release:minor": "npm version minor && git push origin && git push origin --tags",
